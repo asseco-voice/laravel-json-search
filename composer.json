@@ -1,0 +1,30 @@
+{
+    "name": "asseco-voice/laravel-search-query-builder",
+    "description": "Laravel search query builder",
+    "keywords": [
+        "php",
+        "laravel"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^7.4",
+        "illuminate/support": "^7.17",
+        "illuminate/database": "^7.17"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5",
+        "mockery/mockery": "^1.3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Voice\\SearchQueryBuilder\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Voice\\SearchQueryBuilder\\SearchServiceProvider"
+            ]
+        }
+    }
+}
