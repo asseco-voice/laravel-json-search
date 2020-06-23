@@ -114,8 +114,10 @@ the same as ``key=!value1;!value2``.
 ### Returns
 
 Using a ``returns`` key will effectively only return the fields given within it.
-This key is not mandatory. Separating values is done in the same fashion as with
-values within a ``search`` parameter - with semicolon `;`.
+This key is not mandatory, however using it does require following the convention
+used. Everything needs to be enclosed within parenthesis ``( ... )``, and separating
+values is done in the same fashion as with values within a ``search`` parameter 
+- with semicolon `;`.
 
 Example:
 
@@ -127,7 +129,20 @@ Will perform a ``SELECT first_name, last_name FROM ...``
 
 ### Order by
 
-...
+Using ``order-by`` key does an 'order by' based on the given key(s). If no value
+is provided to a key, it is assumed that order is ascending. Order of the keys
+matters!
+
+Example:
+
+```
+?search=(...)&order-by=(first_name;last_name=desc)
+```
+
+Will perform a ``SELECT ... ORDER BY first_name asc, last_name desc``
+
+Explicitly saying ``first_name=asc`` would do the same, however using anything
+besides ``asc/desc`` as a value will yield an error. 
 
 ## Config 
 
