@@ -67,7 +67,7 @@ following:
 
 - ``( ... )`` - everything needs to be enclosed within parenthesis
 - `key` represents a column in the database (multiple keys can be separated with a 
-backslash ``\ \`` i.e. `(key=value\key2=value2)`)
+backslash ``\`` i.e. `(key=value\key2=value2)`)
 - ``operator`` is one of the available main operators for querying (listed below)
 - ``values`` is a semicolon (`;`) separated list of values 
 (i.e. `(key=value;value2;value3)`) which
