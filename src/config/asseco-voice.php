@@ -6,8 +6,8 @@ return [
          * List of attributes which are to be excluded on all models.
          * This takes precedence before other exclusions.
          */
-        'globalExcludeAttributes' => [
-            // 'id', 'created_at', 'something_else'
+        'globalForbiddenAttributes' => [
+            // 'id', 'created_at' ...
         ],
         'modelOptions'            => [
             /**

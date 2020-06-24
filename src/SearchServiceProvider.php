@@ -2,7 +2,6 @@
 
 namespace Voice\SearchQueryBuilder;
 
-use App\Providers\Searcher;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;

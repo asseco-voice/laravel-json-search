@@ -12,7 +12,7 @@ class OperatorCallbacks
      */
     const NOT = '!';
 
-    protected Builder $query;
+    protected Builder $builder;
 
     /**
      * Registered operators and callbacks they use. Order matters!
@@ -29,9 +29,9 @@ class OperatorCallbacks
         '>'   => 'greaterThan',
     ];
 
-    public function __construct(Builder $query)
+    public function __construct(Builder $builder)
     {
-        $this->query = $query;
+        $this->builder = $builder;
     }
 
     /**
@@ -73,7 +73,7 @@ class OperatorCallbacks
                 $value = str_replace('!', '', $value);
 
                 if ($this->hasWildCard($value)) {
-                    $this->query->where($key, 'NOT LIKE', $value);
+                    $this->builder->where($key, 'NOT LIKE', $value);
                     continue;
                 }
 
@@ -82,7 +82,7 @@ class OperatorCallbacks
             }
 
             if ($this->hasWildCard($value)) {
-                $this->query->where($key, 'LIKE', $value);
+                $this->builder->where($key, 'LIKE', $value);
                 continue;
             }
 
@@ -90,10 +90,10 @@ class OperatorCallbacks
         }
 
         if (count($andValues) > 0) {
-            $this->query->orWhereIn($key, $andValues);
+            $this->builder->orWhereIn($key, $andValues);
         }
         if (count($notValues) > 0) {
-            $this->query->whereNotIn($key, $notValues);
+            $this->builder->whereNotIn($key, $notValues);
         }
     }
 
@@ -113,7 +113,7 @@ class OperatorCallbacks
             }
 
             if ($this->hasWildCard($value)) {
-                $this->query->where($key, 'NOT LIKE', $value);
+                $this->builder->where($key, 'NOT LIKE', $value);
                 continue;
             }
 
@@ -122,7 +122,7 @@ class OperatorCallbacks
         }
 
         if (count($notValues) > 0) {
-            $this->query->whereNotIn($key, $notValues);
+            $this->builder->whereNotIn($key, $notValues);
         }
     }
 
@@ -205,7 +205,7 @@ class OperatorCallbacks
             throw new SearchException("[Search] Using $operator operator assumes one parameter only. Remove excess parameters.");
         }
 
-        $this->query->where($key, $operator, $values[0]);
+        $this->builder->where($key, $operator, $values[0]);
     }
 
     /**
@@ -245,6 +245,6 @@ class OperatorCallbacks
 
         $callback = $operator == '<>' ? 'whereBetween' : 'whereNotBetween';
 
-        $this->query->{$callback}($key, [$values[0], $values[1]]);
+        $this->builder->{$callback}($key, [$values[0], $values[1]]);
     }
 }
