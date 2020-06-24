@@ -6,9 +6,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Schema;
 use Voice\SearchQueryBuilder\Exceptions\SearchException;
 
 class Searcher
@@ -29,7 +27,7 @@ class Searcher
     protected Builder               $builder;
     protected Request               $request;
     protected OperatorCallbacks     $operatorCallbacks;
-    protected array                 $modelColumns;
+    protected SearchModel           $searchModel;
 
     protected array $types = [
         '{b}'  => 'boolean',
@@ -41,10 +39,6 @@ class Searcher
 
     /*
      * TODO:
-     * order -> u configu
-     * ...ako uvrstiš u config ono za return, šta to znači ako proslijediš krivi parametar? treba exception baciti
-     * a neće znati kako
-     *
      * datum od danas toliko dana
      * is null is not null
      * bool isprobaj 1/0
@@ -58,6 +52,7 @@ class Searcher
      *
      */
 
+
     /**
      * Searcher constructor.
      * @param Builder $builder
@@ -68,30 +63,10 @@ class Searcher
     {
         $this->builder = $builder;
         $this->request = $request;
-        $this->modelColumns = $this->getModelColumns();
 
         $this->registerCallbacks();
+        $this->registerSearchModel();
         $this->search();
-    }
-
-    /**
-     * Will return column and column type array for a calling model.
-     * Column types will equal Eloquent column types
-     *
-     * @return array
-     */
-    protected function getModelColumns(): array
-    {
-        $model = $this->builder->getModel();
-        $columns = Schema::getColumnListing($model->getTable());
-
-        $modelColumns = [];
-
-        foreach ($columns as $column) {
-            $modelColumns[$column] = DB::getSchemaBuilder()->getColumnType($model->getTable(), $column);
-        }
-
-        return $modelColumns;
     }
 
     protected function registerCallbacks(): void
@@ -99,21 +74,26 @@ class Searcher
         $this->operatorCallbacks = new OperatorCallbacks($this->builder);
     }
 
+    protected function registerSearchModel()
+    {
+        $this->searchModel = new SearchModel($this->builder->getModel());
+    }
+
     /**
      * @throws Exception
      */
     protected function search(): void
     {
-        $search = $this->parseSearchAttributes();
-        $returns = $this->parseReturnAttributes();
-        $orderBy = $this->parseOrderByAttributes();
+        $search = $this->getSearchAttributes();
+        $returns = $this->getReturnAttributes();
+        $orderBy = $this->getOrderByAttributes();
 
         $this->appendQueries($search, $returns, $orderBy);
         Log::info('[Search] SQL: ' . $this->builder->toSql());
     }
 
     /**
-     * Take input string, match it, and explode 'search' attributes using attribute separator
+     * Return key-value pairs array from 'search' query string
      *
      * Input: (key=value\key2=value2)
      *
@@ -123,17 +103,18 @@ class Searcher
      * @return array
      * @throws SearchException
      */
-    protected function parseSearchAttributes(): array
+    protected function getSearchAttributes(): array
     {
         if (!$this->request->has(self::SEARCH_QUERY)) {
             throw new SearchException("[Search] Couldn't match anything for '" . self::SEARCH_QUERY . "' query string.");
         }
 
-        return $this->getAttributes(self::SEARCH_QUERY, self::SEARCH_PARAMETER_SEPARATOR);
+        return $this->getAttributes(self::SEARCH_QUERY);
     }
 
     /**
-     * Take input string, match it, and explode 'returns' attribute using value separator
+     * Return values array from 'returns' query string or model config.
+     * Query string holds the precedence. If it exists, model config will be ignored.
      *
      * Input: (attribute1;attribute2)
      *
@@ -143,15 +124,18 @@ class Searcher
      * @return array
      * @throws SearchException
      */
-    protected function parseReturnAttributes(): array
+    protected function getReturnAttributes(): array
     {
-        return $this->request->has(self::RETURN_QUERY) ?
-            $this->getAttributes(self::RETURN_QUERY, self::VALUE_SEPARATOR) :
-            ['*'];
+        if ($this->request->has(self::RETURN_QUERY)) {
+            return $this->getAttributes(self::RETURN_QUERY);
+        }
+
+        return $this->searchModel->getReturns();
     }
 
     /**
-     * Take input string, match it, and explode 'order by' attributes using attribute separator
+     * Return key-value pairs array from 'order-by' query string or model config.
+     * Query string holds the precedence. If it exists, model config will be ignored.
      *
      * Input: (key=value\key2=value2)
      *
@@ -161,22 +145,23 @@ class Searcher
      * @return array
      * @throws SearchException
      */
-    protected function parseOrderByAttributes(): array
+    protected function getOrderByAttributes(): array
     {
-        return $this->request->has(self::ORDER_BY_QUERY) ?
-            $this->getAttributes(self::ORDER_BY_QUERY, self::SEARCH_PARAMETER_SEPARATOR) :
-            [];
+        if ($this->request->has(self::ORDER_BY_QUERY)) {
+            return $this->getAttributes(self::ORDER_BY_QUERY);
+        }
+
+        return $this->searchModel->getOrderBy();
     }
 
     /**
      * Extract raw string from parenthesis provided in the query string.
      *
      * @param string $inputType
-     * @param string $separator
      * @return mixed
      * @throws SearchException
      */
-    protected function getAttributes(string $inputType, string $separator): array
+    protected function getAttributes(string $inputType): array
     {
         $input = $this->request->query($inputType);
         // Match everything within parenthesis ( ... )
@@ -186,7 +171,7 @@ class Searcher
             throw new SearchException("[Search] Couldn't match anything for '$inputType' query string. Input found: $input. Are you missing a parenthesis?");
         }
 
-        $explodedAttributes = explode($separator, $matched[1]);
+        $explodedAttributes = explode(self::SEARCH_PARAMETER_SEPARATOR, $matched[1]);
         $attributes = $this->removeEmptyValues($explodedAttributes);
 
         if (count($attributes) < 1) {
@@ -373,10 +358,11 @@ class Searcher
      */
     protected function checkForbidden(string $attribute)
     {
-        $forbiddenKeys = Config::get('asseco-voice.search.globalForbiddenAttributes');
+        $forbiddenKeys = Config::get('asseco-voice.search.globalForbiddenColumns');
+        $forbiddenKeys = $this->searchModel->getForbidden($forbiddenKeys);
 
         if (in_array($attribute, $forbiddenKeys)) {
-            throw new SearchException("[Search] Searching by $attribute is forbidden. Change the package config if this is not a desirable behavior.");
+            throw new SearchException("[Search] Searching by '$attribute' field is forbidden. Check the configuration if this is not a desirable behavior.");
         }
     }
 }

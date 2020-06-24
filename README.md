@@ -15,8 +15,8 @@ as a Laravel service provider.
 ## Quick usage
 
 This package is meant to provide an additional ``search`` method on already existing 
-Eloquent models and does not require any additional actions to be done on the models.
-It functions out-of-the-box automatically on a global scale.
+Eloquent models and does not require any additional actions to be done on models.
+It functions out-of-the-box automatically for all Eloquent models within the project.
  
 In order to use it you can call:
 
@@ -29,13 +29,11 @@ So when called within a controller it would for example look like:
 
     public function search(Request $request)
     {
-        return response()->json([
-            'someModel' => SomeModel::search($request)->get()
-        ]);
+        return SomeModel::search($request)->get();
     }
     
-Request object is supposed to be a query string which accepts several parameters
-using a specific search logic explained below.
+It is assumed that Request object contains query string parameters which
+are using a specific search logic explained below.
 
 Quickly starting though, you can try out a simple query string example:
 
@@ -52,13 +50,13 @@ AND first_name not in ('baz') or last_name in ('test')``.
 
 ## Parameter breakdown
 Parameters follow a special logic to query the DB. It is possible to use the following
-keys inside a query string:
+query string parameters (keys):
 
 - ``search`` - will perform the querying logic. **This key is mandatory** to have, 
 all other are optional.
-- ``returns`` - will return only the columns provided here (underlying logic is that 
+- ``returns`` - will return only the columns provided as values (underlying logic is that 
 it actually does `SELECT /keys/ FROM` instead of `SELECT * FROM`)
-- ``order-by`` - will order the results based on input parameters
+- ``order-by`` - will order the results based on values provided
 
 ### Search
 
@@ -66,8 +64,8 @@ The logic is done in a ``(key operator values)`` fashion in which we assume the
 following:
 
 - ``( ... )`` - everything needs to be enclosed within parenthesis
-- `key` represents a column in the database (multiple keys can be separated with a 
-backslash ``\`` i.e. `(key=value\key2=value2)`)
+- `key` represents a column in the database. Multiple keys can be separated with a 
+backslash ``\`` i.e. `(key=value\key2=value2)`.
 - ``operator`` is one of the available main operators for querying (listed below)
 - ``values`` is a semicolon (`;`) separated list of values 
 (i.e. `(key=value;value2;value3)`) which
@@ -117,12 +115,12 @@ Using a ``returns`` key will effectively only return the fields given within it.
 This key is not mandatory, however using it does require following the convention
 used. Everything needs to be enclosed within parenthesis ``( ... )``, and separating
 values is done in the same fashion as with values within a ``search`` parameter 
-- with semicolon `;`.
+- with a backslash ``\``.
 
 Example:
 
 ```
-?search=(...)&returns=(first_name;last_name)
+?search=(...)&returns=(first_name\last_name)
 ```
 
 Will perform a ``SELECT first_name, last_name FROM ...``
@@ -136,14 +134,20 @@ matters!
 Example:
 
 ```
-?search=(...)&order-by=(first_name;last_name=desc)
+?search=(...)&order-by=(first_name\last_name=desc)
 ```
 
 Will perform a ``SELECT ... ORDER BY first_name asc, last_name desc``
 
 Explicitly saying ``first_name=asc`` would do the same, however using anything
-besides ``asc/desc`` as a value will yield an error. 
+besides ``asc/desc`` as a value will throw an exception. 
 
 ## Config 
 
-...
+Besides standard query string search, it is possible to provide additional 
+package configuration.
+
+Publish the configuration by running 
+`php artisan vendor:publish --provider="Voice\SearchQueryBuilder\SearchServiceProvider"`.
+
+All the keys within the configuration file have a detailed explanation above each key.
