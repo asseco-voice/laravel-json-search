@@ -19,7 +19,8 @@ class SearchServiceProvider extends ServiceProvider
             /**
              * @var $this Builder
              */
-            new Searcher($this, $request);
+            $searcher = new Searcher($this, $request);
+            $searcher->search();
             //dd($this->dump());
             return $this;
             // $query->when(str_contains($attribute, '.'), callback1, callback2)

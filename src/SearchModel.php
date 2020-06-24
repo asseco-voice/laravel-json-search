@@ -74,14 +74,13 @@ class SearchModel
         return $forbiddenKeys;
     }
 
-
     /**
      * Will return column and column type array for a calling model.
      * Column types will equal Eloquent column types
      *
      * @return array
      */
-    protected function getModelColumns(): array
+    public function getModelColumns(): array
     {
         $table = $this->model->getTable();
         $columns = Schema::getColumnListing($table);

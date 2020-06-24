@@ -12,7 +12,8 @@ class OperatorCallbacks
      */
     const NOT = '!';
 
-    protected Builder $builder;
+    protected Builder            $builder;
+    protected SearchModel        $searchModel;
 
     /**
      * Registered operators and callbacks they use. Order matters!
@@ -29,9 +30,10 @@ class OperatorCallbacks
         '>'   => 'greaterThan',
     ];
 
-    public function __construct(Builder $builder)
+    public function __construct(Builder $builder, SearchModel $searchModel)
     {
         $this->builder = $builder;
+        $this->searchModel = $searchModel;
     }
 
     /**
@@ -60,13 +62,14 @@ class OperatorCallbacks
     /**
      * @param $key
      * @param $values
-     * @param null $type
      * @throws SearchException
      */
-    public function equals($key, $values, $type = null)
+    public function equals($key, $values)
     {
         $andValues = [];
         $notValues = [];
+
+        $type = $this->assumeType($key);
 
         foreach ($values as $value) {
             if ($this->isNegated($value)) {
@@ -97,13 +100,19 @@ class OperatorCallbacks
         }
     }
 
+    public function assumeType(string $key)
+    {
+        $columns = $this->searchModel->getModelColumns();
+
+        return array_key_exists($key, $columns) ? $columns[$key] : null;
+    }
+
     /**
      * @param $key
      * @param $values
-     * @param null $type
      * @throws SearchException
      */
-    public function notEquals($key, $values, $type = null)
+    public function notEquals($key, $values)
     {
         $notValues = [];
 
@@ -151,45 +160,41 @@ class OperatorCallbacks
     /**
      * @param $key
      * @param $values
-     * @param null $type
      * @throws SearchException
      */
-    public function lessThan($key, $values, $type = null)
+    public function lessThan($key, $values)
     {
-        $this->lessOrMore($key, $values, '<', $type);
+        $this->lessOrMore($key, $values, '<');
     }
 
     /**
      * @param $key
      * @param $values
-     * @param null $type
      * @throws SearchException
      */
-    public function lessThanOrEqual($key, $values, $type = null)
+    public function lessThanOrEqual($key, $values)
     {
-        $this->lessOrMore($key, $values, '<=', $type);
+        $this->lessOrMore($key, $values, '<=');
     }
 
     /**
      * @param $key
      * @param $values
-     * @param null $type
      * @throws SearchException
      */
-    public function greaterThan($key, $values, $type = null)
+    public function greaterThan($key, $values)
     {
-        $this->lessOrMore($key, $values, '>', $type);
+        $this->lessOrMore($key, $values, '>');
     }
 
     /**
      * @param $key
      * @param $values
-     * @param null $type
      * @throws SearchException
      */
-    public function greaterThanOrEqual($key, $values, $type = null)
+    public function greaterThanOrEqual($key, $values)
     {
-        $this->lessOrMore($key, $values, '>=', $type);
+        $this->lessOrMore($key, $values, '>=');
     }
 
     /**
@@ -199,7 +204,7 @@ class OperatorCallbacks
      * @param $type
      * @throws SearchException
      */
-    protected function lessOrMore($key, $values, $operator, $type)
+    protected function lessOrMore($key, $values, $operator)
     {
         if (count($values) > 1) {
             throw new SearchException("[Search] Using $operator operator assumes one parameter only. Remove excess parameters.");
@@ -211,33 +216,30 @@ class OperatorCallbacks
     /**
      * @param $key
      * @param $values
-     * @param null $type
      * @throws SearchException
      */
-    public function between($key, $values, $type = null)
+    public function between($key, $values)
     {
-        $this->betweenCallback($key, $values, '<>', $type);
+        $this->betweenCallback($key, $values, '<>');
     }
 
     /**
      * @param $key
      * @param $values
-     * @param null $type
      * @throws SearchException
      */
-    public function notBetween($key, $values, $type = null)
+    public function notBetween($key, $values)
     {
-        $this->betweenCallback($key, $values, '!<>', $type);
+        $this->betweenCallback($key, $values, '!<>');
     }
 
     /**
      * @param $key
      * @param $values
      * @param $operator
-     * @param null $type
      * @throws SearchException
      */
-    public function betweenCallback($key, $values, $operator, $type = null)
+    public function betweenCallback($key, $values, $operator)
     {
         if (count($values) != 2) {
             throw new SearchException("[Search] Using $operator operator assumes exactly 2 parameters. Wrong number of parameters provided.");

@@ -1,7 +1,18 @@
 <?php
 
+use Voice\SearchQueryBuilder\RequestParameters\OrderBy;
+use Voice\SearchQueryBuilder\RequestParameters\Returns;
+use Voice\SearchQueryBuilder\RequestParameters\Search;
+
 return [
     'search' => [
+
+        'registeredRequestParameters' => [
+            Search::class,
+            Returns::class,
+            OrderBy::class,
+        ],
+
         /**
          * List of globally forbidden columns to search on.
          * Searching by forbidden columns will throw an exception
