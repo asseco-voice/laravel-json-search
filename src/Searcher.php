@@ -55,7 +55,7 @@ class Searcher
     }
 
     /**
-     * Append all queries from registered attributes
+     * Append all queries from registered parameters
      *
      * @throws Exceptions\SearchException
      */

@@ -7,10 +7,10 @@ use Voice\SearchQueryBuilder\Exceptions\SearchException;
 class Returns extends AbstractParameter
 {
     /**
-     * Get name by which the attribute will be fetched
+     * Get name by which the parameter will be fetched
      * @return string
      */
-    public function getAttributeName(): string
+    public function getParameterName(): string
     {
         return 'returns';
     }
@@ -21,21 +21,21 @@ class Returns extends AbstractParameter
      */
     public function appendQuery(): void
     {
-        $attributes = $this->parse();
+        $parameters = $this->parse();
 
-        $this->builder->select($attributes);
+        $this->builder->select($parameters);
     }
 
     /**
-     * Return key-value pairs array from query string attribute
+     * Return key-value pairs array from query string parameter
      *
      * @return array
      * @throws SearchException
      */
     public function parse(): array
     {
-        if ($this->request->has($this->getAttributeName())) {
-            return $this->getRawAttributes($this->getAttributeName());
+        if ($this->request->has($this->getParameterName())) {
+            return $this->getRawParameters($this->getParameterName());
         }
 
         return $this->searchModel->getReturns();

@@ -11,7 +11,7 @@ use Voice\SearchQueryBuilder\SearchModel;
 abstract class AbstractParameter
 {
     /**
-     * Constant by which attributes will be split. E.g. attribute=value\attribute2=value2
+     * Constant by which parameters will be split. E.g. parameter=value\parameter2=value2
      */
     const PARAMETER_SEPARATOR = '\\';
 
@@ -29,10 +29,10 @@ abstract class AbstractParameter
     }
 
     /**
-     * Get name by which the attribute will be fetched
+     * Get name by which the parameter will be fetched
      * @return string
      */
-    abstract public function getAttributeName(): string;
+    abstract public function getParameterName(): string;
 
     /**
      * Append the query to Eloquent builder
@@ -41,7 +41,7 @@ abstract class AbstractParameter
     abstract public function appendQuery(): void;
 
     /**
-     * Return key-value pairs array from query string attribute
+     * Return key-value pairs array from query string parameter
      *
      * @return array
      * @throws SearchException
@@ -55,7 +55,7 @@ abstract class AbstractParameter
      * @return mixed
      * @throws SearchException
      */
-    protected function getRawAttributes(string $inputType): array
+    protected function getRawParameters(string $inputType): array
     {
         $input = $this->request->query($inputType);
         // Match everything within parenthesis ( ... )
@@ -65,14 +65,14 @@ abstract class AbstractParameter
             throw new SearchException("[Search] Couldn't match anything for '$inputType' query string. Input found: $input. Are you missing a parenthesis?");
         }
 
-        $explodedAttributes = explode(self::PARAMETER_SEPARATOR, $matched[1]);
-        $attributes = $this->removeEmptyValues($explodedAttributes);
+        $explodedParameters = explode(self::PARAMETER_SEPARATOR, $matched[1]);
+        $parameters = $this->removeEmptyValues($explodedParameters);
 
-        if (count($attributes) < 1) {
-            throw new SearchException("[Search] Couldn't match attributes for '$inputType' query string. Input found: $input. Did you include anything within parenthesis?");
+        if (count($parameters) < 1) {
+            throw new SearchException("[Search] Couldn't match parameters for '$inputType' query string. Input found: $input. Did you include anything within parenthesis?");
         }
 
-        return $attributes;
+        return $parameters;
     }
 
     /**

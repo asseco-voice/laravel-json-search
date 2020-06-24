@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Schema;
 
 class SearchModel
 {
-    private Model    $model;
-    private array    $config;
+    private Model $model;
+    private array $config;
 
     public function __construct(Model $model)
     {
@@ -39,15 +39,15 @@ class SearchModel
 
     public function getOrderBy(): array
     {
-        $attributes = [];
+        $parameters = [];
 
         if (array_key_exists('orderBy', $this->config) && $this->config['orderBy']) {
             foreach ($this->config['orderBy'] as $key => $value) {
-                $attributes[] = "$key=$value";
+                $parameters[] = "$key=$value";
             }
         }
 
-        return $attributes;
+        return $parameters;
     }
 
     public function getForbidden(array $forbiddenKeys)

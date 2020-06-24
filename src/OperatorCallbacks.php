@@ -12,8 +12,8 @@ class OperatorCallbacks
      */
     const NOT = '!';
 
-    protected Builder            $builder;
-    protected SearchModel        $searchModel;
+    protected Builder     $builder;
+    protected SearchModel $searchModel;
 
     /**
      * Registered operators and callbacks they use. Order matters!

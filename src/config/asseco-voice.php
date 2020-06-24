@@ -43,9 +43,9 @@ return [
                 /**
                  * Disable search on specific columns. Searching on forbidden columns will throw an exception
                  */
-                'forbiddenColumns'  => ['attribute', 'attribute2'],
+                'forbiddenColumns'  => ['column', 'column2'],
                 /**
-                 * Array of attributes to order by in 'column => direction' format.
+                 * Array of columns to order by in 'column => direction' format.
                  * 'order-by' from query string takes precedence before these values.
                  */
                 'orderBy'           => [
@@ -53,22 +53,22 @@ return [
                     'created_at' => 'desc'
                 ],
                 /**
-                 * List of attributes to return. Return values forwarded within the request will
-                 * override these values. This acts as a 'SELECT /return only attributes/' from.
+                 * List of columns to return. Return values forwarded within the request will
+                 * override these values. This acts as a 'SELECT /return only columns/' from.
                  * By default, 'SELECT *' will be ran.
                  */
-                'returns'           => ['attribute', 'attribute2'],
+                'returns'           => ['column', 'column2'],
 
 
 
                 /**
                  * TBD
-                 * Some attributes may be different on frontend than on backend.
-                 * It is possible to map such attributes so that the true ORM
+                 * Some column names may be different on frontend than on backend.
+                 * It is possible to map such columns so that the true ORM
                  * property stays hidden.
                  */
-                'attributeMapping'  => [
-                    'frontendAttribute' => 'backendAttribute',
+                'columnMapping'  => [
+                    'frontendColumn' => 'backendColumn',
                 ],
             ],
         ],

@@ -8,7 +8,7 @@ use Voice\SearchQueryBuilder\Exceptions\SearchException;
 class Search extends AbstractParameter
 {
     /**
-     * Constant by which values will be split within a single attribute. E.g. attribute=value1;value2
+     * Constant by which values will be split within a single parameter. E.g. parameter=value1;value2
      */
     const VALUE_SEPARATOR = ';';
 
@@ -21,10 +21,10 @@ class Search extends AbstractParameter
     ];
 
     /**
-     * Get name by which the attribute will be fetched
+     * Get name by which the parameter will be fetched
      * @return string
      */
-    public function getAttributeName(): string
+    public function getParameterName(): string
     {
         return 'search';
     }
@@ -35,107 +35,107 @@ class Search extends AbstractParameter
      */
     public function appendQuery(): void
     {
-        $attributes = $this->parse();
+        $parameters = $this->parse();
 
-        $this->builder->where(function () use ($attributes) {
-            foreach ($attributes as $attribute) {
-                $this->appendSearchQuery($attribute);
+        $this->builder->where(function () use ($parameters) {
+            foreach ($parameters as $parameter) {
+                $this->appendSearchQuery($parameter);
             }
         });
     }
 
     /**
-     * Return key-value pairs array from query string attribute
+     * Return key-value pairs array from query string parameter
      *
      * @return array
      * @throws SearchException
      */
     function parse(): array
     {
-        if (!$this->request->has($this->getAttributeName())) {
-            throw new SearchException("[Search] Couldn't match anything for '" . $this->getAttributeName() . "' query string.");
+        if (!$this->request->has($this->getParameterName())) {
+            throw new SearchException("[Search] Couldn't match anything for '" . $this->getParameterName() . "' query string.");
         }
 
-        return $this->getRawAttributes($this->getAttributeName());
+        return $this->getRawParameters($this->getParameterName());
     }
 
     /**
-     * Append the query based on the given attributes
+     * Append the query based on the given parameters
      *
-     * @param $searchAttribute
+     * @param $searchParameter
      * @throws SearchException
      */
-    protected function appendSearchQuery(string $searchAttribute): void
+    protected function appendSearchQuery(string $searchParameter): void
     {
-        [$operator, $callback] = $this->operatorCallbacks->parseOperatorAndCallback($searchAttribute);
-        [$column, $values, $type] = $this->parseSearchAttributeValues($searchAttribute, $operator);
+        [$operator, $callback] = $this->operatorCallbacks->parseOperatorAndCallback($searchParameter);
+        [$column, $values, $type] = $this->parseSearchParameterValues($searchParameter, $operator);
 
         $this->checkForbidden($column);
 
-        $splitValues = $this->splitValues($searchAttribute, $values);
+        $splitValues = $this->splitValues($searchParameter, $values);
 
         call_user_func($callback, $column, $splitValues, $type);
     }
 
     /**
-     * Exploding by a first occurrence of the operator to get the attribute key and value separated
+     * Exploding by a first occurrence of the operator to get the parameter key and value separated
      *
-     * @param $searchAttribute
+     * @param $searchParameter
      * @param $operator
      * @return array
      * @throws SearchException
      */
-    protected function parseSearchAttributeValues($searchAttribute, $operator): array
+    protected function parseSearchParameterValues($searchParameter, $operator): array
     {
-        $split = explode($operator, $searchAttribute, 2);
+        $split = explode($operator, $searchParameter, 2);
 
         if (count($split) != 2) {
-            throw new SearchException("[Search] Invalid search attribute(s): " . print_r($split, true));
+            throw new SearchException("[Search] Invalid search parameter(s): " . print_r($split, true));
         }
 
-        $attribute = $split[0];
+        $parameter = $split[0];
         $values = $split[1];
 
-        [$type, $attribute] = $this->getAttributeType($attribute);
+        [$type, $parameter] = $this->getParameterType($parameter);
 
-        return [$attribute, $values, $type];
+        return [$parameter, $values, $type];
     }
 
     /**
      * Check if global forbidden key is used
      *
-     * @param string $attribute
+     * @param string $parameter
      * @throws SearchException
      */
-    protected function checkForbidden(string $attribute)
+    protected function checkForbidden(string $parameter)
     {
         $forbiddenKeys = Config::get('asseco-voice.search.globalForbiddenColumns');
         $forbiddenKeys = $this->searchModel->getForbidden($forbiddenKeys);
 
-        if (in_array($attribute, $forbiddenKeys)) {
-            throw new SearchException("[Search] Searching by '$attribute' field is forbidden. Check the configuration if this is not a desirable behavior.");
+        if (in_array($parameter, $forbiddenKeys)) {
+            throw new SearchException("[Search] Searching by '$parameter' field is forbidden. Check the configuration if this is not a desirable behavior.");
         }
     }
 
     /**
-     * Check for attribute type (will be applied to all values)
+     * Check for parameter type (will be applied to all values)
      *
-     * @param $attribute
+     * @param $parameter
      * @return array
      */
-    protected function getAttributeType($attribute): array
+    protected function getParameterType($parameter): array
     {
         $type = null;
 
         foreach ($this->types as $typeKey => $name) {
-            if (strpos($attribute, $typeKey) !== false) {
+            if (strpos($parameter, $typeKey) !== false) {
                 $type = $name;
-                $attribute = str_replace($typeKey, '', $attribute);
+                $parameter = str_replace($typeKey, '', $parameter);
                 break;
             }
         }
 
-        return [$type, $attribute];
+        return [$type, $parameter];
     }
 
     /**
@@ -146,18 +146,18 @@ class Search extends AbstractParameter
      * Output: val1
      *         val2
      *
-     * @param $attribute
+     * @param $parameter
      * @param $values
      * @return array
      * @throws SearchException
      */
-    protected function splitValues(string $attribute, string $values): array
+    protected function splitValues(string $parameter, string $values): array
     {
         $valueArray = explode(self::VALUE_SEPARATOR, $values);
         $cleanedUpValues = $this->removeEmptyValues($valueArray);
 
         if (count($cleanedUpValues) < 1) {
-            throw new SearchException("[Search] Attribute $attribute is missing a value.");
+            throw new SearchException("[Search] Parameter $parameter is missing a value.");
         }
 
         return $cleanedUpValues;
