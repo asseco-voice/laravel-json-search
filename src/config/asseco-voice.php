@@ -1,16 +1,16 @@
 <?php
 
-use Voice\SearchQueryBuilder\RequestParameters\OrderBy;
-use Voice\SearchQueryBuilder\RequestParameters\Returns;
-use Voice\SearchQueryBuilder\RequestParameters\Search;
+use Voice\SearchQueryBuilder\RequestParameters\OrderByParameter;
+use Voice\SearchQueryBuilder\RequestParameters\ReturnsParameter;
+use Voice\SearchQueryBuilder\RequestParameters\SearchParameter;
 
 return [
     'search' => [
 
         'registeredRequestParameters' => [
-            Search::class,
-            Returns::class,
-            OrderBy::class,
+            SearchParameter::class,
+            ReturnsParameter::class,
+            OrderByParameter::class,
         ],
 
         /**
@@ -18,7 +18,7 @@ return [
          * Searching by forbidden columns will throw an exception
          * This takes precedence before other exclusions.
          */
-        'globalForbiddenColumns' => [
+        'globalForbiddenColumns'      => [
             // 'id', 'created_at' ...
         ],
 
@@ -26,7 +26,7 @@ return [
          * Refined options for a single model.
          * Use if you want to enforce rules on a specific model without affecting globally all models
          */
-        'modelOptions'           => [
+        'modelOptions'                => [
 
             /**
              * For real usage, use real models without quotes. This is only meant to show the available options.
@@ -35,7 +35,9 @@ return [
                 /**
                  * If enabled, this will read from model guarded/fillable properties
                  * and decide whether it is allowed to search by these parameters.
-                 * This takes precedence before forbidden columns, but if both is used, it
+                 * If guarded property is present, fillable won't be taken. Laravel standard
+                 * is to use one or the other, not both.
+                 * This takes precedence before forbidden columns, but if both are used, it
                  * will behave like union of columns to be excluded.
                  * Searching on forbidden columns will throw an exception.
                  */
@@ -60,14 +62,13 @@ return [
                 'returns'           => ['column', 'column2'],
 
 
-
                 /**
                  * TBD
                  * Some column names may be different on frontend than on backend.
                  * It is possible to map such columns so that the true ORM
                  * property stays hidden.
                  */
-                'columnMapping'  => [
+                'columnMapping'     => [
                     'frontendColumn' => 'backendColumn',
                 ],
             ],

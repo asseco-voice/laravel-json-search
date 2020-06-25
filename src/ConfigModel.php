@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class SearchModel
+class ConfigModel
 {
     private Model $model;
     private array $config;
@@ -50,6 +50,12 @@ class SearchModel
         return $parameters;
     }
 
+    /**
+     * Union of Eloquent exclusion (guarded/fillable) and forbidden columns
+     *
+     * @param array $forbiddenKeys
+     * @return array
+     */
     public function getForbidden(array $forbiddenKeys)
     {
         $forbiddenKeys = $this->getEloquentExclusion($forbiddenKeys);
@@ -102,4 +108,28 @@ class SearchModel
 
         return $forbiddenKeys;
     }
+
+    public function getParameterType($parameter)
+    {
+        $columns = $this->getModelColumns();
+
+        return array_key_exists($parameter, $columns) ? $columns[$parameter] : null;
+    }
+
+    /*
+    protected function getParameterType($parameter): array
+    {
+        $type = null;
+
+        foreach ($this->types as $typeKey => $name) {
+            if (strpos($parameter, $typeKey) !== false) {
+                $type = $name;
+                $parameter = str_replace($typeKey, '', $parameter);
+                break;
+            }
+        }
+
+        return [$type, $parameter];
+    }
+    */
 }

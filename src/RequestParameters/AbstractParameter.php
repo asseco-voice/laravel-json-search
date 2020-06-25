@@ -5,27 +5,27 @@ namespace Voice\SearchQueryBuilder\RequestParameters;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Voice\SearchQueryBuilder\Exceptions\SearchException;
-use Voice\SearchQueryBuilder\OperatorCallbacks;
-use Voice\SearchQueryBuilder\SearchModel;
+use Voice\SearchQueryBuilder\ConfigModel;
+use Voice\SearchQueryBuilder\RequestParameters\Traits\RemovesEmptyValues;
 
 abstract class AbstractParameter
 {
+    use RemovesEmptyValues;
+
     /**
      * Constant by which parameters will be split. E.g. parameter=value\parameter2=value2
      */
     const PARAMETER_SEPARATOR = '\\';
 
-    public Request                  $request;
-    public SearchModel              $searchModel;
-    public Builder                  $builder;
-    public OperatorCallbacks        $operatorCallbacks;
+    public Request     $request;
+    public ConfigModel $configModel;
+    public Builder     $builder;
 
     public function __construct(Request $request, Builder $builder)
     {
         $this->request = $request;
         $this->builder = $builder;
-        $this->searchModel = new SearchModel($this->builder->getModel());
-        $this->operatorCallbacks = new OperatorCallbacks($this->builder, $this->searchModel);
+        $this->configModel = new ConfigModel($this->builder->getModel());
     }
 
     /**
@@ -73,26 +73,5 @@ abstract class AbstractParameter
         }
 
         return $parameters;
-    }
-
-    /**
-     * Remove empty values from a given array
-     *
-     * @param array $input
-     * @return array
-     */
-    protected function removeEmptyValues(array $input): array
-    {
-        $trimmedInput = array_map('trim', $input);
-
-        $deleteKeys = array_keys(array_filter($trimmedInput, function ($item) {
-            return $item == '';
-        }));
-
-        foreach ($deleteKeys as $deleteKey) {
-            unset($trimmedInput[$deleteKey]);
-        }
-
-        return $trimmedInput;
     }
 }

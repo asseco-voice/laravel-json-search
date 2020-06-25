@@ -4,7 +4,7 @@ namespace Voice\SearchQueryBuilder\RequestParameters;
 
 use Voice\SearchQueryBuilder\Exceptions\SearchException;
 
-class Returns extends AbstractParameter
+class ReturnsParameter extends AbstractParameter
 {
     /**
      * Get name by which the parameter will be fetched
@@ -34,10 +34,12 @@ class Returns extends AbstractParameter
      */
     public function parse(): array
     {
-        if ($this->request->has($this->getParameterName())) {
-            return $this->getRawParameters($this->getParameterName());
+        $parameter = $this->getParameterName();
+
+        if ($this->request->has($parameter)) {
+            return $this->getRawParameters($parameter);
         }
 
-        return $this->searchModel->getReturns();
+        return $this->configModel->getReturns();
     }
 }

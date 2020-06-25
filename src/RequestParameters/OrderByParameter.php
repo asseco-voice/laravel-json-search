@@ -3,9 +3,12 @@
 namespace Voice\SearchQueryBuilder\RequestParameters;
 
 use Voice\SearchQueryBuilder\Exceptions\SearchException;
+use Voice\SearchQueryBuilder\RequestParameters\Models\OrderBy;
 
-class OrderBy extends AbstractParameter
+class OrderByParameter extends AbstractParameter
 {
+    const ORDER_BY_DELIMITER = '=';
+
     /**
      * Get name by which the parameter will be fetched
      * @return string
@@ -24,7 +27,7 @@ class OrderBy extends AbstractParameter
         $parameters = $this->parse();
 
         foreach ($parameters as $parameter) {
-            $this->appendOrderBy($parameter);
+            $this->appendSingle($parameter);
         }
     }
 
@@ -36,11 +39,13 @@ class OrderBy extends AbstractParameter
      */
     public function parse(): array
     {
-        if ($this->request->has($this->getParameterName())) {
-            return $this->getRawParameters($this->getParameterName());
+        $parameter = $this->getParameterName();
+
+        if ($this->request->has($parameter)) {
+            return $this->getRawParameters($parameter);
         }
 
-        return $this->searchModel->getOrderBy();
+        return $this->configModel->getOrderBy();
     }
 
     /**
@@ -49,38 +54,25 @@ class OrderBy extends AbstractParameter
      * @param string $orderByParameters
      * @throws SearchException
      */
-    protected function appendOrderBy(string $orderByParameters): void
+    protected function appendSingle(string $orderByParameters): void
     {
-        [$column, $direction] = $this->parseOrderByParameterValues($orderByParameters);
+        $order = $this->parseOrderByParameterValues($orderByParameters);
 
-        $this->builder->orderBy($column, $direction);
+        $this->builder->orderBy($order->column(), $order->direction());
     }
-
 
     /**
      * Get order column and direction from provided parameter
      *
      * @param string $parameter
-     * @return array
+     * @return OrderBy
      * @throws SearchException
      */
-    protected function parseOrderByParameterValues(string $parameter): array
+    protected function parseOrderByParameterValues(string $parameter): OrderBy
     {
-        $exploded = explode('=', $parameter, 2);
-        $split = $this->removeEmptyValues($exploded);
+        $explodedParameters = explode(self::ORDER_BY_DELIMITER, $parameter, 2);
+        $parameters = $this->removeEmptyValues($explodedParameters);
 
-        if (count($split) == 0) {
-            throw new SearchException("[Search] Something went wrong with ordering: $parameter.");
-        }
-
-        $column = $split[0];
-        $direction = 'asc';
-
-        if (count($split) > 1) {
-            $direction = $split[1];
-        }
-
-        return [$column, $direction];
+        return new OrderBy($parameters);
     }
-
 }

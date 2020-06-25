@@ -12,8 +12,10 @@ class OperatorCallbacks
      */
     const NOT = '!';
 
-    protected Builder     $builder;
-    protected SearchModel $searchModel;
+    protected Builder $builder;
+
+    public string $operator;
+    public array  $callback;
 
     /**
      * Registered operators and callbacks they use. Order matters!
@@ -30,20 +32,27 @@ class OperatorCallbacks
         '>'   => 'greaterThan',
     ];
 
-    public function __construct(Builder $builder, SearchModel $searchModel)
+    /**
+     * OperatorCallbacks constructor.
+     * @param Builder $builder
+     * @param ConfigModel $configModel
+     * @param string $searchParameter
+     * @throws SearchException
+     */
+    public function __construct(Builder $builder, string $searchParameter)
     {
         $this->builder = $builder;
-        $this->searchModel = $searchModel;
+
+        $this->parse($searchParameter);
     }
 
     /**
      * Find which callback to use depending on operator provided
      *
      * @param $searchParameter
-     * @return array
      * @throws SearchException
      */
-    public function parseOperatorAndCallback($searchParameter): array
+    protected function parse(string $searchParameter): void
     {
         foreach ($this->operatorCallbackMapping as $operator => $callbackValue) {
             $callback = [$this, $callbackValue];
@@ -52,7 +61,9 @@ class OperatorCallbacks
                     throw new SearchException("[Search] No valid callback registered for given operator: $operator");
                 }
 
-                return [$operator, $callback];
+                $this->operator = $operator;
+                $this->callback = $callback;
+                return;
             }
         }
 
@@ -68,8 +79,6 @@ class OperatorCallbacks
     {
         $andValues = [];
         $notValues = [];
-
-        $type = $this->assumeType($key);
 
         foreach ($values as $value) {
             if ($this->isNegated($value)) {
@@ -98,13 +107,6 @@ class OperatorCallbacks
         if (count($notValues) > 0) {
             $this->builder->whereNotIn($key, $notValues);
         }
-    }
-
-    public function assumeType(string $key)
-    {
-        $columns = $this->searchModel->getModelColumns();
-
-        return array_key_exists($key, $columns) ? $columns[$key] : null;
     }
 
     /**
