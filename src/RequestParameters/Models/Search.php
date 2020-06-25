@@ -19,7 +19,7 @@ class Search
 
     public string $column;
     public array  $values;
-    public        $type;
+    public string $type;
 
     /**
      * Search constructor.
@@ -50,7 +50,7 @@ class Search
 
         $this->column = $split[0];
         $this->values = $this->splitValues($this->column, $split[1]);
-        $this->type = null;
+        $this->type = '';
     }
 
 

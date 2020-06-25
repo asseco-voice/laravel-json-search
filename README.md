@@ -69,7 +69,7 @@ backslash ``\`` i.e. `(key=value\key2=value2)`.
 - ``operator`` is one of the available main operators for querying (listed below)
 - ``values`` is a semicolon (`;`) separated list of values 
 (i.e. `(key=value;value2;value3)`) which
-can have micro-operators on them as well (i.e. `key=value;!value2;%value3%`). 
+can have micro-operators on them as well (i.e. `key=value;!value2;$value3$`). 
 
 #### Main operators
 
@@ -94,11 +94,12 @@ Will perform a ``SELECT * FROM some_table WHERE first_name IN
 #### Micro operators
 
 - `!` - negates the value. Works only on the beginning of the value (i.e. `!value`).
-- `%` - performs a `LIKE` query. Works only on a beginning, end or both ends of the 
-value (i.e. `%value`, `value%` or `%value%`).
+- `$` - performs a `LIKE` query. Works only on a beginning, end or both ends of the 
+value (i.e. `$value`, `value$` or `$value$`). `$` gets converted to `%`. `%` can't be
+used because it is a reserved character in query strings.
 
 ```
-?search=(first_name=!foo\last_name=bar%)
+?search=(first_name=!foo\last_name=bar$)
 ```
 
 Will perform a ``SELECT * FROM some_table WHERE first_name NOT IN 
@@ -141,6 +142,23 @@ Will perform a ``SELECT ... ORDER BY first_name asc, last_name desc``
 
 Explicitly saying ``first_name=asc`` would do the same, however using anything
 besides ``asc/desc`` as a value will throw an exception. 
+
+### Relations
+
+It is possible to load object relations as well by using ``relations`` parameter.
+Same convention is followed:
+
+```
+?...&returns=(...\...)
+```
+
+Relations, if defined properly and following Laravel convention, should be predictable
+to assume:
+
+- 1:M & M:M - relation name is in plural (i.e. Contact has many **Addresses**, relation 
+name is thus 'addresses')
+- M:1 - relation name is in singular (i.e. Comment belongs to a **Post**, relation
+name is thus 'post')
 
 ## Config 
 

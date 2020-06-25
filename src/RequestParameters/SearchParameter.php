@@ -3,6 +3,7 @@
 namespace Voice\SearchQueryBuilder\RequestParameters;
 
 use Illuminate\Support\Facades\Config;
+use Voice\SearchQueryBuilder\Callbacks\AbstractCallback;
 use Voice\SearchQueryBuilder\Exceptions\SearchException;
 use Voice\SearchQueryBuilder\OperatorCallbacks;
 use Voice\SearchQueryBuilder\RequestParameters\Models\Search;
@@ -63,7 +64,11 @@ class SearchParameter extends AbstractParameter
 
         $this->checkForbidden($searchModel->column);
 
-        call_user_func($operatorCallback->callback, $searchModel->column, $searchModel->values, $searchModel->type);
+        /**
+         * @var AbstractCallback $callback
+         */
+        $callback = new $operatorCallback->callback($this->builder);
+        $callback->execute($searchModel->column, $searchModel->values, $searchModel->type);
     }
 
     /**

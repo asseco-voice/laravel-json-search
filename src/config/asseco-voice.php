@@ -1,6 +1,15 @@
 <?php
 
+use Voice\SearchQueryBuilder\Callbacks\Between;
+use Voice\SearchQueryBuilder\Callbacks\Equals;
+use Voice\SearchQueryBuilder\Callbacks\GreaterThan;
+use Voice\SearchQueryBuilder\Callbacks\GreaterThanOrEqual;
+use Voice\SearchQueryBuilder\Callbacks\LessThan;
+use Voice\SearchQueryBuilder\Callbacks\LessThanOrEqual;
+use Voice\SearchQueryBuilder\Callbacks\NotBetween;
+use Voice\SearchQueryBuilder\Callbacks\NotEquals;
 use Voice\SearchQueryBuilder\RequestParameters\OrderByParameter;
+use Voice\SearchQueryBuilder\RequestParameters\RelationsParameter;
 use Voice\SearchQueryBuilder\RequestParameters\ReturnsParameter;
 use Voice\SearchQueryBuilder\RequestParameters\SearchParameter;
 
@@ -11,6 +20,22 @@ return [
             SearchParameter::class,
             ReturnsParameter::class,
             OrderByParameter::class,
+            RelationsParameter::class
+        ],
+
+        /**
+         * Registered operators and callbacks they use. Order matters!
+         * Operators with more characters must come before those with less.
+         */
+        'registeredSearchCallbacks'   => [
+            '!<>' => NotBetween::class,
+            '<='  => LessThanOrEqual::class,
+            '>='  => GreaterThanOrEqual::class,
+            '<>'  => Between::class,
+            '!='  => NotEquals::class,
+            '='   => Equals::class,
+            '<'   => LessThan::class,
+            '>'   => GreaterThan::class,
         ],
 
         /**
@@ -60,7 +85,10 @@ return [
                  * By default, 'SELECT *' will be ran.
                  */
                 'returns'           => ['column', 'column2'],
-
+                /**
+                 * List of relations to load by default. These will be overridden if provided within query string.
+                 */
+                'relations'         => ['rel1', 'rel2'],
 
                 /**
                  * TBD

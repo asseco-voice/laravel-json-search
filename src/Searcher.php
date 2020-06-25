@@ -23,6 +23,14 @@ class Searcher
      *
      * forsiraj type -> riješi tipove one
      *
+     *
+     * relacije u query stringu
+     *
+     *
+     * paginacija
+     *
+     * riješi bug (first_name=is;%ba)
+     *
      * or?
      *
      * https://freek.dev/1182-searching-models-using-a-where-like-query-in-laravel

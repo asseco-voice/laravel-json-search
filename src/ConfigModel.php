@@ -37,6 +37,15 @@ class ConfigModel
         return ['*'];
     }
 
+    public function getRelations()
+    {
+        if (array_key_exists('relations', $this->config) && $this->config['relations']) {
+            return $this->config['relations'];
+        }
+
+        return [];
+    }
+
     public function getOrderBy(): array
     {
         $parameters = [];
