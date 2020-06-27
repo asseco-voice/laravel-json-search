@@ -41,15 +41,12 @@ abstract class AbstractCallback
     abstract public function execute(): void;
 
     /**
-     * TODO: move to a separate class
-     *
      * @param $key
      * @param $values
      * @param $operator
-     * @param $type
      * @throws SearchException
      */
-    public function lessOrMore($key, $values, $operator)
+    protected function lessOrMoreCallback($key, $values, $operator)
     {
         if (count($values) > 1) {
             throw new SearchException("[Search] Using $operator operator assumes one parameter only. Remove excess parameters.");
@@ -65,7 +62,7 @@ abstract class AbstractCallback
      * @param $operator
      * @throws SearchException
      */
-    public function betweenCallback($key, $values, $operator)
+    protected function betweenCallback($key, $values, $operator)
     {
         if (count($values) != 2) {
             throw new SearchException("[Search] Using $operator operator assumes exactly 2 parameters. Wrong number of parameters provided.");

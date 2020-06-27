@@ -52,7 +52,7 @@ class SearchParameter extends AbstractParameter
                 continue;
             }
 
-            $searchModel = new Search($this->builder->getModel(), $argument, $callbackClassName::getCallbackOperator());
+            $searchModel = new Search($this->builder->getModel(), $argument, $operator);
             /**
              * @var AbstractCallback $callback
              */
@@ -63,7 +63,6 @@ class SearchParameter extends AbstractParameter
             $searchModel->values = $callbackType->prepare($searchModel->values);
 
             $this->checkForbidden($searchModel->column);
-
             $callback->execute();
             return;
         }
@@ -80,7 +79,7 @@ class SearchParameter extends AbstractParameter
     protected function checkForbidden(string $parameter)
     {
         $forbiddenKeys = Config::get('asseco-voice.search.globalForbiddenColumns');
-        $forbiddenKeys = $this->configModel->getForbidden($forbiddenKeys);
+        $forbiddenKeys = $this->modelConfig->getForbidden($forbiddenKeys);
 
         if (in_array($parameter, $forbiddenKeys)) {
             throw new SearchException("[Search] Searching by '$parameter' field is forbidden. Check the configuration if this is not a desirable behavior.");

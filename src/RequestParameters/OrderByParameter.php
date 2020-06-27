@@ -68,6 +68,6 @@ class OrderByParameter extends AbstractParameter
      */
     protected function fetchAlternative(): array
     {
-        return $this->configModel->getOrderBy();
+        return $this->modelConfig->getOrderBy();
     }
 }

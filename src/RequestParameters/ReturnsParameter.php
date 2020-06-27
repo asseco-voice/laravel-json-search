@@ -35,6 +35,6 @@ class ReturnsParameter extends AbstractParameter
      */
     protected function fetchAlternative(): array
     {
-        return $this->configModel->getReturns();
+        return $this->modelConfig->getReturns();
     }
 }

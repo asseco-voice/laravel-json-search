@@ -35,6 +35,6 @@ class RelationsParameter extends AbstractParameter
      */
     protected function fetchAlternative(): array
     {
-        return $this->configModel->getRelations();
+        return $this->modelConfig->getRelations();
     }
 }

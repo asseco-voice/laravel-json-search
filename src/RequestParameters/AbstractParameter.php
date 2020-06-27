@@ -19,13 +19,13 @@ abstract class AbstractParameter
 
     public Request     $request;
     public Builder     $builder;
-    public ModelConfig $configModel;
+    public ModelConfig $modelConfig;
 
-    public function __construct(Request $request, Builder $builder, ModelConfig $configModel)
+    public function __construct(Request $request, Builder $builder, ModelConfig $modelConfig)
     {
         $this->request = $request;
         $this->builder = $builder;
-        $this->configModel = $configModel;
+        $this->modelConfig = $modelConfig;
     }
 
     /**

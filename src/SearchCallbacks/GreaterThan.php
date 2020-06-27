@@ -15,6 +15,6 @@ class GreaterThan extends AbstractCallback
      */
     public function execute(): void
     {
-        $this->lessOrMore($this->searchModel->column, $this->searchModel->values, '>');
+        $this->lessOrMoreCallback($this->searchModel->column, $this->searchModel->values, '>');
     }
 }

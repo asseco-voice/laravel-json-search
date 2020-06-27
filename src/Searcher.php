@@ -19,14 +19,9 @@ class Searcher
      * TODO:
      * datum od danas toliko dana
      * is null is not null
-     * bool isprobaj 1/0
-     *
-     * forsiraj type -> riješi tipove one
      *
      * relacije u query stringu, rekurzivno?
      * provjeri ACL
-     *
-     * duplikati
      *
      * paginacija
      *
