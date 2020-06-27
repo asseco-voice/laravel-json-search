@@ -23,7 +23,6 @@ class SearchServiceProvider extends ServiceProvider
             $searcher->search();
             //dd($this->dump());
             return $this;
-            // $query->when(str_contains($column, '.'), callback1, callback2)
         });
     }
 

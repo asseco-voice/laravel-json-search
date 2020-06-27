@@ -1,6 +1,6 @@
 <?php
 
-namespace Voice\SearchQueryBuilder\RequestParameters\Traits;
+namespace Voice\SearchQueryBuilder\Traits;
 
 trait RemovesEmptyValues
 {

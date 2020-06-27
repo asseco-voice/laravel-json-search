@@ -1,9 +1,10 @@
 <?php
 
-namespace Voice\SearchQueryBuilder\Callbacks;
+namespace Voice\SearchQueryBuilder\SearchCallbacks;
 
 use Illuminate\Database\Eloquent\Builder;
 use Voice\SearchQueryBuilder\Exceptions\SearchException;
+use Voice\SearchQueryBuilder\RequestParameters\Models\Search;
 
 abstract class AbstractCallback
 {
@@ -11,50 +12,33 @@ abstract class AbstractCallback
      * Constant declaring what will be used as a negation parameter.
      */
     const NOT = '!';
-    const LIKE = '$';
+    const LIKE = '*';
 
-    public $builder;
+    protected Builder $builder;
+    protected Search  $searchModel;
 
-    public function __construct(Builder $builder)
+    public function __construct(Builder $builder, Search $searchModel)
     {
         $this->builder = $builder;
+        $this->searchModel = $searchModel;
+    }
+
+    /**
+     * Child class MUST extend a NAME constant.
+     * This is a Laravel friendly name for columns based on Laravel migration column types
+     *
+     * @return string
+     */
+    public static function getCallbackOperator(): string
+    {
+        return static::OPERATOR;
     }
 
     /**
      * Execute a callback on a given column, providing the array of values
-     *
-     * @param string $column
-     * @param array $values
-     * @param string $type
+     * @throws SearchException
      */
-    abstract function execute(string $column, array $values, string $type);
-
-    /**
-     * @param string $splitValue
-     * @return bool
-     */
-    protected function isNegated(string $splitValue): bool
-    {
-        return substr($splitValue, 0, 1) === self::NOT;
-    }
-
-    /**
-     * @param string $value
-     * @return bool
-     */
-    protected function hasWildCard(string $value): bool
-    {
-        if (!$value) {
-            return false;
-        };
-
-        return $value[0] === self::LIKE || $value[strlen($value) - 1] === self::LIKE;
-    }
-
-    protected function replaceWildCard($value)
-    {
-        return str_replace(self::LIKE, '%', $value);
-    }
+    abstract public function execute(): void;
 
     /**
      * TODO: move to a separate class
@@ -90,5 +74,32 @@ abstract class AbstractCallback
         $callback = $operator == '<>' ? 'whereBetween' : 'whereNotBetween';
 
         $this->builder->{$callback}($key, [$values[0], $values[1]]);
+    }
+
+    /**
+     * @param string $splitValue
+     * @return bool
+     */
+    protected function isNegated(string $splitValue): bool
+    {
+        return substr($splitValue, 0, 1) === self::NOT;
+    }
+
+    /**
+     * @param string $value
+     * @return bool
+     */
+    protected function hasWildCard(string $value): bool
+    {
+        if (!$value) {
+            return false;
+        };
+
+        return $value[0] === self::LIKE || $value[strlen($value) - 1] === self::LIKE;
+    }
+
+    protected function replaceWildCard($value)
+    {
+        return str_replace(self::LIKE, '%', $value);
     }
 }

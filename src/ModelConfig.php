@@ -4,10 +4,8 @@ namespace Voice\SearchQueryBuilder;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
-class ConfigModel
+class ModelConfig
 {
     private Model $model;
     private array $config;
@@ -89,26 +87,6 @@ class ConfigModel
         return $forbiddenKeys;
     }
 
-    /**
-     * Will return column and column type array for a calling model.
-     * Column types will equal Eloquent column types
-     *
-     * @return array
-     */
-    public function getModelColumns(): array
-    {
-        $table = $this->model->getTable();
-        $columns = Schema::getColumnListing($table);
-
-        $modelColumns = [];
-
-        foreach ($columns as $column) {
-            $modelColumns[$column] = DB::getSchemaBuilder()->getColumnType($table, $column);
-        }
-
-        return $modelColumns;
-    }
-
     protected function getForbiddenColumns(array $forbiddenKeys): array
     {
         if (array_key_exists('forbiddenColumns', $this->config) && $this->config['forbiddenColumns']) {
@@ -117,28 +95,4 @@ class ConfigModel
 
         return $forbiddenKeys;
     }
-
-    public function getParameterType($parameter)
-    {
-        $columns = $this->getModelColumns();
-
-        return array_key_exists($parameter, $columns) ? $columns[$parameter] : null;
-    }
-
-    /*
-    protected function getParameterType($parameter): array
-    {
-        $type = null;
-
-        foreach ($this->types as $typeKey => $name) {
-            if (strpos($parameter, $typeKey) !== false) {
-                $type = $name;
-                $parameter = str_replace($typeKey, '', $parameter);
-                break;
-            }
-        }
-
-        return [$type, $parameter];
-    }
-    */
 }

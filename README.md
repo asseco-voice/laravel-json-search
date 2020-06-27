@@ -48,6 +48,15 @@ Quickly starting though, you can try out a simple query string example:
 Will perform a ``SELECT * FROM some_table WHERE first_name IN ('foo, 'bar') 
 AND first_name not in ('baz') or last_name in ('test')``.
 
+## Dev naming conventions for this package
+
+- **parameter** is a query string key name (i.e. `?key=...`)
+- **arguments** are considered to be query string values (i.e. `?key=( ... value ...)`),
+or more precisely everything coming after ``=`` sign after query string key
+    - **argument** is a single key-value pair within parameter values
+(i.e. `?key=( key=value, key=value )`). 
+        -  single argument is broken down to **column / operator / value** 
+
 ## Parameter breakdown
 Parameters follow a special logic to query the DB. It is possible to use the following
 query string parameters (keys):
@@ -69,7 +78,7 @@ backslash ``\`` i.e. `(key=value\key2=value2)`.
 - ``operator`` is one of the available main operators for querying (listed below)
 - ``values`` is a semicolon (`;`) separated list of values 
 (i.e. `(key=value;value2;value3)`) which
-can have micro-operators on them as well (i.e. `key=value;!value2;$value3$`). 
+can have micro-operators on them as well (i.e. `key=value;!value2;*value3*`). 
 
 #### Main operators
 
@@ -94,12 +103,12 @@ Will perform a ``SELECT * FROM some_table WHERE first_name IN
 #### Micro operators
 
 - `!` - negates the value. Works only on the beginning of the value (i.e. `!value`).
-- `$` - performs a `LIKE` query. Works only on a beginning, end or both ends of the 
-value (i.e. `$value`, `value$` or `$value$`). `$` gets converted to `%`. `%` can't be
+- `*` - performs a `LIKE` query. Works only on a beginning, end or both ends of the 
+value (i.e. `*value`, `value*` or `*value*`). `*` gets converted to `%`. `%` can't be
 used because it is a reserved character in query strings.
 
 ```
-?search=(first_name=!foo\last_name=bar$)
+?search=(first_name=!foo\last_name=bar*)
 ```
 
 Will perform a ``SELECT * FROM some_table WHERE first_name NOT IN 

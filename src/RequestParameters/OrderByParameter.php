@@ -7,7 +7,7 @@ use Voice\SearchQueryBuilder\RequestParameters\Models\OrderBy;
 
 class OrderByParameter extends AbstractParameter
 {
-    const ORDER_BY_DELIMITER = '=';
+    const VALUE_DELIMITER = '=';
 
     /**
      * Get name by which the parameter will be fetched
@@ -24,55 +24,50 @@ class OrderByParameter extends AbstractParameter
      */
     public function appendQuery(): void
     {
-        $parameters = $this->parse();
+        $arguments = $this->getArguments();
 
-        foreach ($parameters as $parameter) {
-            $this->appendSingle($parameter);
+        foreach ($arguments as $argument) {
+            $this->appendSingle($argument);
         }
     }
 
     /**
-     * Return key-value pairs array from query string parameter
+     * Append the 'order by' query from given arguments.
      *
-     * @return array
+     * @param string $argument
      * @throws SearchException
      */
-    public function parse(): array
+    protected function appendSingle(string $argument): void
     {
-        $parameter = $this->getParameterName();
-
-        if ($this->request->has($parameter)) {
-            return $this->getRawParameters($parameter);
-        }
-
-        return $this->configModel->getOrderBy();
-    }
-
-    /**
-     * Append the 'order by' query from given parameters.
-     *
-     * @param string $orderByParameters
-     * @throws SearchException
-     */
-    protected function appendSingle(string $orderByParameters): void
-    {
-        $order = $this->parseOrderByParameterValues($orderByParameters);
+        $order = $this->parseArgument($argument);
 
         $this->builder->orderBy($order->column(), $order->direction());
     }
 
     /**
-     * Get order column and direction from provided parameter
+     * Get column and direction from provided argument
      *
-     * @param string $parameter
+     * @param string $argument
      * @return OrderBy
      * @throws SearchException
      */
-    protected function parseOrderByParameterValues(string $parameter): OrderBy
+    protected function parseArgument(string $argument): OrderBy
     {
-        $explodedParameters = explode(self::ORDER_BY_DELIMITER, $parameter, 2);
-        $parameters = $this->removeEmptyValues($explodedParameters);
+        $splitArgument = explode(self::VALUE_DELIMITER, $argument, 2);
+        $splitArgument = $this->removeEmptyValues($splitArgument);
 
-        return new OrderBy($parameters);
+        return new OrderBy($splitArgument);
+    }
+
+    /**
+     * Provide additional method as a fallback if query string argument is not present.
+     * Empty array is a valid default, meaning no fallback is available.
+     * Override if fallback is needed.
+     *
+     * @return array
+     */
+    protected function fetchAlternative(): array
+    {
+        return $this->configModel->getOrderBy();
     }
 }

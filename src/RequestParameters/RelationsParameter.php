@@ -21,25 +21,20 @@ class RelationsParameter extends AbstractParameter
      */
     public function appendQuery(): void
     {
-        $parameters = $this->parse();
+        $arguments = $this->getArguments();
 
-        $this->builder->with($parameters);
+        $this->builder->with($arguments);
     }
 
     /**
-     * Return key-value pairs array from query string parameter
+     * Provide additional method as a fallback if query string argument is not present.
+     * Empty array is a valid default, meaning no fallback is available.
+     * Override if fallback is needed.
      *
      * @return array
-     * @throws SearchException
      */
-    public function parse(): array
+    protected function fetchAlternative(): array
     {
-        $parameter = $this->getParameterName();
-
-        if ($this->request->has($parameter)) {
-            return $this->getRawParameters($parameter);
-        }
-
         return $this->configModel->getRelations();
     }
 }

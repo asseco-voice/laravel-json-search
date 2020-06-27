@@ -3,10 +3,10 @@
 namespace Voice\SearchQueryBuilder\RequestParameters;
 
 use Illuminate\Support\Facades\Config;
-use Voice\SearchQueryBuilder\Callbacks\AbstractCallback;
 use Voice\SearchQueryBuilder\Exceptions\SearchException;
-use Voice\SearchQueryBuilder\OperatorCallbacks;
+use Voice\SearchQueryBuilder\OperatorsConfig;
 use Voice\SearchQueryBuilder\RequestParameters\Models\Search;
+use Voice\SearchQueryBuilder\SearchCallbacks\AbstractCallback;
 
 class SearchParameter extends AbstractParameter
 {
@@ -25,50 +25,50 @@ class SearchParameter extends AbstractParameter
      */
     public function appendQuery(): void
     {
-        $parameters = $this->parse();
+        $arguments = $this->getArguments();
+        $operatorsConfig = new OperatorsConfig();
 
-        $this->builder->where(function () use ($parameters) {
-            foreach ($parameters as $parameter) {
-                $this->appendSearchQuery($parameter);
+        $this->builder->where(function () use ($arguments, $operatorsConfig) {
+            foreach ($arguments as $argument) {
+                $this->appendSingle($argument, $operatorsConfig);
             }
         });
     }
 
     /**
-     * Return key-value pairs array from query string parameter
+     * Append the query based on the given argument
      *
-     * @return array
+     * @param string $argument
+     * @param OperatorsConfig $operatorsConfig
      * @throws SearchException
      */
-    function parse(): array
+    protected function appendSingle(string $argument, OperatorsConfig $operatorsConfig): void
     {
-        $parameter = $this->getParameterName();
+        foreach ($operatorsConfig->registeredCallbacks() as $callbackClassName) {
+            $operator = $callbackClassName::getCallbackOperator();
 
-        if (!$this->request->has($parameter)) {
-            throw new SearchException("[Search] Couldn't match anything for '" . $parameter . "' query string.");
+            $argumentHasOperator = strpos($argument, $operator) !== false;
+            if (!$argumentHasOperator) {
+                continue;
+            }
+
+            $searchModel = new Search($this->builder->getModel(), $argument, $callbackClassName::getCallbackOperator());
+            /**
+             * @var AbstractCallback $callback
+             */
+            $callback = new $callbackClassName($this->builder, $searchModel);
+
+            $callbackType = $operatorsConfig->getCallbackType($callback, $searchModel->type);
+
+            $searchModel->values = $callbackType->prepare($searchModel->values);
+
+            $this->checkForbidden($searchModel->column);
+
+            $callback->execute();
+            return;
         }
 
-        return $this->getRawParameters($parameter);
-    }
-
-    /**
-     * Append the query based on the given parameters
-     *
-     * @param $searchParameter
-     * @throws SearchException
-     */
-    protected function appendSearchQuery(string $searchParameter): void
-    {
-        $operatorCallback = new OperatorCallbacks($this->builder, $searchParameter);
-        $searchModel = new Search($searchParameter, $operatorCallback->operator);
-
-        $this->checkForbidden($searchModel->column);
-
-        /**
-         * @var AbstractCallback $callback
-         */
-        $callback = new $operatorCallback->callback($this->builder);
-        $callback->execute($searchModel->column, $searchModel->values, $searchModel->type);
+        throw new SearchException("[Search] No valid callback registered for $argument. Are you missing an operator?");
     }
 
     /**

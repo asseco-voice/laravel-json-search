@@ -1,27 +1,29 @@
 <?php
 
-namespace Voice\SearchQueryBuilder\Callbacks;
+namespace Voice\SearchQueryBuilder\SearchCallbacks;
+
+use Voice\SearchQueryBuilder\Exceptions\SearchException;
 
 class NotEquals extends AbstractCallback
 {
+    const OPERATOR = '!=';
+
     /**
      * Execute a callback on a given column, providing the array of values
      *
-     * @param string $column
-     * @param array $values
-     * @param string $type
+     * @throws SearchException
      */
-    function execute(string $column, array $values, string $type)
+    public function execute(): void
     {
         $notValues = [];
 
-        foreach ($values as $value) {
+        foreach ($this->searchModel->values as $value) {
             if ($this->isNegated($value)) {
                 $value = str_replace('!', '', $value);
             }
 
             if ($this->hasWildCard($value)) {
-                $this->builder->where($column, 'NOT LIKE', $this->replaceWildCard($value));
+                $this->builder->where($this->searchModel->column, 'NOT LIKE', $this->replaceWildCard($value));
                 continue;
             }
 
@@ -30,7 +32,7 @@ class NotEquals extends AbstractCallback
         }
 
         if (count($notValues) > 0) {
-            $this->builder->whereNotIn($column, $notValues);
+            $this->builder->whereNotIn($this->searchModel->column, $notValues);
         }
     }
 }

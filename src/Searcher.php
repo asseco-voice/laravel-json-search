@@ -10,31 +10,29 @@ use Voice\SearchQueryBuilder\RequestParameters\AbstractParameter;
 
 class Searcher
 {
-    protected Builder $builder;
-    protected Request $request;
-    protected array   $requestParameters;
+    protected Builder     $builder;
+    protected Request     $request;
+    protected ModelConfig $configModel;
+    protected array       $requestParameters;
 
     /*
      * TODO:
      * datum od danas toliko dana
      * is null is not null
      * bool isprobaj 1/0
-     * relacije
      *
      * forsiraj type -> riješi tipove one
      *
+     * relacije u query stringu, rekurzivno?
+     * provjeri ACL
      *
-     * relacije u query stringu
-     *
+     * duplikati
      *
      * paginacija
      *
-     * riješi bug (first_name=is;%ba)
-     *
-     * or?
+     * or/and?
      *
      * https://freek.dev/1182-searching-models-using-a-where-like-query-in-laravel
-     *
      */
 
     /**
@@ -47,7 +45,7 @@ class Searcher
     {
         $this->builder = $builder;
         $this->request = $request;
-
+        $this->configModel = new ModelConfig($builder->getModel());
         $this->requestParameters = Config::get('asseco-voice.search.registeredRequestParameters');
     }
 
@@ -69,12 +67,14 @@ class Searcher
      */
     protected function appendQueries(): void
     {
-        /**
-         * @var AbstractParameter $instance
-         */
         foreach ($this->requestParameters as $parameter) {
-            $instance = new $parameter($this->request, $this->builder);
-            $instance->appendQuery();
+            $requestParameter = $this->createRequestParameter($parameter);
+            $requestParameter->appendQuery();
         }
+    }
+
+    protected function createRequestParameter($parameter): AbstractParameter
+    {
+        return new $parameter($this->request, $this->builder, $this->configModel);
     }
 }
