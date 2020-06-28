@@ -3,8 +3,8 @@
 namespace Voice\SearchQueryBuilder\RequestParameters;
 
 use Illuminate\Support\Facades\Config;
+use Voice\SearchQueryBuilder\Config\OperatorsConfig;
 use Voice\SearchQueryBuilder\Exceptions\SearchException;
-use Voice\SearchQueryBuilder\OperatorsConfig;
 use Voice\SearchQueryBuilder\RequestParameters\Models\Search;
 use Voice\SearchQueryBuilder\SearchCallbacks\AbstractCallback;
 
@@ -44,30 +44,19 @@ class SearchParameter extends AbstractParameter
      */
     protected function appendSingle(string $argument, OperatorsConfig $operatorsConfig): void
     {
-        foreach ($operatorsConfig->registeredCallbacks() as $callbackClassName) {
-            $operator = $callbackClassName::getCallbackOperator();
+        $searchModel = new Search($this->builder->getModel(), $this->modelConfig, $argument);
 
-            $argumentHasOperator = strpos($argument, $operator) !== false;
-            if (!$argumentHasOperator) {
-                continue;
-            }
+        $callbackClassName = $operatorsConfig->getCallbackClassFromOperator($searchModel->operator);
+        /**
+         * @var AbstractCallback $callback
+         */
+        $callback = new $callbackClassName($this->builder, $searchModel);
 
-            $searchModel = new Search($this->builder->getModel(), $argument, $operator);
-            /**
-             * @var AbstractCallback $callback
-             */
-            $callback = new $callbackClassName($this->builder, $searchModel);
+        $callbackType = $operatorsConfig->getCallbackType($callback, $searchModel->type);
+        $searchModel->values = $callbackType->prepare($searchModel->values);
 
-            $callbackType = $operatorsConfig->getCallbackType($callback, $searchModel->type);
-
-            $searchModel->values = $callbackType->prepare($searchModel->values);
-
-            $this->checkForbidden($searchModel->column);
-            $callback->execute();
-            return;
-        }
-
-        throw new SearchException("[Search] No valid callback registered for $argument. Are you missing an operator?");
+        $this->checkForbidden($searchModel->column);
+        $callback->execute();
     }
 
     /**

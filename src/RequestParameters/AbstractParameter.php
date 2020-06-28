@@ -4,7 +4,7 @@ namespace Voice\SearchQueryBuilder\RequestParameters;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Voice\SearchQueryBuilder\ModelConfig;
+use Voice\SearchQueryBuilder\Config\ModelConfig;
 use Voice\SearchQueryBuilder\Exceptions\SearchException;
 use Voice\SearchQueryBuilder\Traits\RemovesEmptyValues;
 

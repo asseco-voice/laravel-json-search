@@ -3,8 +3,8 @@
 namespace Voice\SearchQueryBuilder\RequestParameters\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
+use Voice\SearchQueryBuilder\Config\ModelConfig;
+use Voice\SearchQueryBuilder\Config\OperatorsConfig;
 use Voice\SearchQueryBuilder\Exceptions\SearchException;
 use Voice\SearchQueryBuilder\Traits\RemovesEmptyValues;
 
@@ -16,27 +16,44 @@ class Search
      * Constant by which values will be split within a single parameter. E.g. parameter=value1;value2
      */
     const VALUE_SEPARATOR = ';';
-    public string $column;
-    public array  $values;
-    public string $type;
-    private Model  $model;
-    private string $searchParameter;
-    private string $operator;
+
+    public string  $column;
+    public array   $values;
+    public string  $type;
+    public string  $operator;
+
+    private Model       $model;
+    private string      $argument;
+    private ModelConfig $modelConfig;
 
     /**
      * Search constructor.
      * @param Model $model
-     * @param string $searchParameter
-     * @param string $operator
+     * @param ModelConfig $modelConfig
+     * @param string $argument
      * @throws SearchException
      */
-    public function __construct(Model $model, string $searchParameter, string $operator)
+    public function __construct(Model $model, ModelConfig $modelConfig, string $argument)
     {
         $this->model = $model;
-        $this->searchParameter = $searchParameter;
-        $this->operator = $operator;
+        $this->argument = $argument;
+        $this->modelConfig = $modelConfig;
 
-        $this->parse();
+        $operatorConfig = new OperatorsConfig();
+        $operators = $operatorConfig->getOperators();
+
+        foreach ($operators as $operator) {
+            $argumentHasOperator = strpos($argument, $operator) !== false;
+            if (!$argumentHasOperator) {
+                continue;
+            }
+
+            $this->operator = $operator;
+            $this->parse();
+            return;
+        }
+
+        throw new SearchException("[Search] No valid callback registered for $argument. Are you missing an operator?");
     }
 
     /**
@@ -46,7 +63,7 @@ class Search
      */
     protected function parse()
     {
-        $split = explode($this->operator, $this->searchParameter, 2);
+        $split = explode($this->operator, $this->argument, 2);
 
         if (count($split) != 2) {
             throw new SearchException("[Search] Invalid search parameter(s): " . print_r($split, true));
@@ -89,7 +106,7 @@ class Search
      */
     public function getColumnType($column): string
     {
-        $columns = $this->getModelColumns();
+        $columns = $this->modelConfig->getModelColumns();
 
         if (!array_key_exists($column, $columns)) {
             throw new SearchException("[Search] Column $column is of unknown type, or it doesn't exist on a model.");
@@ -97,25 +114,4 @@ class Search
 
         return $columns[$column];
     }
-
-    /**
-     * Will return column and column type array for a calling model.
-     * Column types will equal Eloquent column types
-     *
-     * @return array
-     */
-    public function getModelColumns(): array
-    {
-        $table = $this->model->getTable();
-        $columns = Schema::getColumnListing($table);
-
-        $modelColumns = [];
-
-        foreach ($columns as $column) {
-            $modelColumns[$column] = DB::getSchemaBuilder()->getColumnType($table, $column);
-        }
-
-        return $modelColumns;
-    }
-
 }

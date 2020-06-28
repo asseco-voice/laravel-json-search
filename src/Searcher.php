@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
+use Voice\SearchQueryBuilder\Config\ModelConfig;
 use Voice\SearchQueryBuilder\RequestParameters\AbstractParameter;
 
 class Searcher
 {
     protected Builder     $builder;
     protected Request     $request;
-    protected ModelConfig $configModel;
+    protected ModelConfig $modelConfig;
     protected array       $requestParameters;
 
     /*
@@ -40,7 +41,7 @@ class Searcher
     {
         $this->builder = $builder;
         $this->request = $request;
-        $this->configModel = new ModelConfig($builder->getModel());
+        $this->modelConfig = new ModelConfig($builder->getModel());
         $this->requestParameters = Config::get('asseco-voice.search.registeredRequestParameters');
     }
 
@@ -70,6 +71,6 @@ class Searcher
 
     protected function createRequestParameter($parameter): AbstractParameter
     {
-        return new $parameter($this->request, $this->builder, $this->configModel);
+        return new $parameter($this->request, $this->builder, $this->modelConfig);
     }
 }

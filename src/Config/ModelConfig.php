@@ -1,9 +1,11 @@
 <?php
 
-namespace Voice\SearchQueryBuilder;
+namespace Voice\SearchQueryBuilder\Config;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class ModelConfig
 {
@@ -94,5 +96,26 @@ class ModelConfig
         }
 
         return $forbiddenKeys;
+    }
+
+
+    /**
+     * Will return column and column type array for a calling model.
+     * Column types will equal Eloquent column types
+     *
+     * @return array
+     */
+    public function getModelColumns(): array
+    {
+        $table = $this->model->getTable();
+        $columns = Schema::getColumnListing($table);
+
+        $modelColumns = [];
+
+        foreach ($columns as $column) {
+            $modelColumns[$column] = DB::getSchemaBuilder()->getColumnType($table, $column);
+        }
+
+        return $modelColumns;
     }
 }

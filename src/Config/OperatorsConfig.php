@@ -1,6 +1,6 @@
 <?php
 
-namespace Voice\SearchQueryBuilder;
+namespace Voice\SearchQueryBuilder\Config;
 
 use Illuminate\Support\Facades\Config;
 use Voice\SearchQueryBuilder\Exceptions\SearchException;
@@ -11,13 +11,49 @@ class OperatorsConfig
 {
     protected $config;
 
-    public array $registeredTypes = [];
+    public array $operatorCallbackMapping = [];
+    public array $registeredTypes         = [];
 
     public function __construct()
     {
         $this->config = Config::get('asseco-voice.search.operators');
 
+        $this->registerOperators();
         $this->registerTypes();
+    }
+
+    protected function registerOperators()
+    {
+        /**
+         * @var AbstractCallback $callback
+         */
+        foreach ($this->registeredCallbacks() as $callback) {
+            $this->operatorCallbackMapping[] = [
+                $callback::getCallbackOperator() => new $callback
+            ];
+        }
+    }
+
+    public function getOperators()
+    {
+        /**
+         * @var AbstractCallback $callback
+         */
+        return array_map(fn ($callback) => $callback::getCallbackOperator(), $this->registeredCallbacks());
+    }
+
+    /**
+     * @param string $operator
+     * @return string
+     * @throws SearchException
+     */
+    public function getCallbackClassFromOperator(string $operator): string
+    {
+        if(!array_key_exists($operator, $this->operatorCallbackMapping)){
+            throw new SearchException("[Search] No valid callback registered for '$operator' operator.");
+        }
+
+        return new $this->operatorCallbackMapping[$operator];
     }
 
     protected function registerTypes(): void
@@ -59,11 +95,11 @@ class OperatorsConfig
 
     /**
      * @param AbstractCallback $callback
-     * @param string $type
+     * @param string $laravelType
      * @return AbstractType
      * @throws SearchException
      */
-    public function getCallbackType(AbstractCallback $callback, string $type): AbstractType
+    public function getCallbackType(AbstractCallback $callback, string $laravelType): AbstractType
     {
         $callbackClassName = get_class($callback);
 
@@ -75,13 +111,13 @@ class OperatorsConfig
             /**
              * @var AbstractType $callbackType
              */
-            if ($callbackType::getTypeName() === $type) {
+            if ($callbackType::getTypeName() === $laravelType) {
                 return new $callbackType;
             }
         }
 
         $operator = $callback::getCallbackOperator();
-        throw new SearchException("[Search] Type '$type' doesn't support '$operator' operator.");
+        throw new SearchException("[Search] Type '$laravelType' doesn't support '$operator' operator.");
     }
 
     /**

@@ -13,7 +13,7 @@ class SearchServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([__DIR__ . '/config/asseco-voice.php' => config_path('asseco-voice.php'),]);
+        $this->publishes([__DIR__ . '/Config/asseco-voice.php' => config_path('asseco-voice.php'),]);
 
         Builder::macro('search', function (Request $request) {
             /**
@@ -31,7 +31,7 @@ class SearchServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/config/asseco-voice.php', 'asseco-voice');
+        $this->mergeConfigFrom(__DIR__ . '/Config/asseco-voice.php', 'asseco-voice');
     }
 
 }
