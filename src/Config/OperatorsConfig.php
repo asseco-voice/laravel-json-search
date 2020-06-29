@@ -22,16 +22,12 @@ class OperatorsConfig
         $this->registerTypes();
     }
 
-    protected function registerOperators()
+    protected function registerOperators(): void
     {
-        /**
-         * @var AbstractCallback $callback
-         */
-        foreach ($this->registeredCallbacks() as $callback) {
-            $this->operatorCallbackMapping[] = [
-                $callback::getCallbackOperator() => new $callback
-            ];
-        }
+        $operators = $this->getOperators();
+        $callbacks = $this->registeredCallbacks();
+
+        $this->operatorCallbackMapping = array_combine($operators, $callbacks);
     }
 
     public function getOperators()
@@ -53,7 +49,7 @@ class OperatorsConfig
             throw new SearchException("[Search] No valid callback registered for '$operator' operator.");
         }
 
-        return new $this->operatorCallbackMapping[$operator];
+        return $this->operatorCallbackMapping[$operator];
     }
 
     protected function registerTypes(): void
