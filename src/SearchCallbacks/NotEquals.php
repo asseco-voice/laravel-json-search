@@ -22,11 +22,7 @@ class NotEquals extends AbstractCallback
             $builder->where($column, 'NOT LIKE', $like);
         }
 
-        if ($values->null) {
-            $builder->whereNull($column);
-        }
-
-        if ($values->notNull) {
+        if ($values->null || $values->notNull) {
             $builder->whereNotNull($column);
         }
 
