@@ -3,24 +3,42 @@
 namespace Voice\SearchQueryBuilder\SearchCallbacks;
 
 use Illuminate\Database\Eloquent\Builder;
+use Voice\SearchQueryBuilder\CategorizedValues;
+use Voice\SearchQueryBuilder\Config\OperatorsConfig;
 use Voice\SearchQueryBuilder\Exceptions\SearchException;
 use Voice\SearchQueryBuilder\RequestParameters\Models\Search;
 
 abstract class AbstractCallback
 {
+    protected Builder           $builder;
+    protected Search            $searchModel;
+    protected CategorizedValues $categorizedValues;
+    protected OperatorsConfig   $operatorsConfig;
+
     /**
-     * Constant declaring what will be used as a negation parameter.
+     * AbstractCallback constructor.
+     * @param Builder $builder
+     * @param Search $searchModel
+     * @param OperatorsConfig $operatorsConfig
+     * @throws SearchException
      */
-    const NOT = '!';
-    const LIKE = '*';
-
-    protected Builder $builder;
-    protected Search  $searchModel;
-
-    public function __construct(Builder $builder, Search $searchModel)
+    public function __construct(Builder $builder, Search $searchModel, OperatorsConfig $operatorsConfig)
     {
         $this->builder = $builder;
         $this->searchModel = $searchModel;
+        $this->operatorsConfig = $operatorsConfig;
+
+        $this->categorizedValues = new CategorizedValues($operatorsConfig, $this->searchModel);
+
+        $this->builder->when(
+            str_contains($this->searchModel->column, '.'),
+            function (Builder $builder) {
+                $this->appendRelations($builder, $this->searchModel->column, $this->categorizedValues);
+            },
+            function (Builder $builder) {
+                $this->execute($builder, $this->searchModel->column, $this->categorizedValues);
+            }
+        );
     }
 
     /**
@@ -36,33 +54,45 @@ abstract class AbstractCallback
 
     /**
      * Execute a callback on a given column, providing the array of values
-     * @throws SearchException
+     * @param Builder $builder
+     * @param string $column
+     * @param CategorizedValues $values
      */
-    abstract public function execute(): void;
+    abstract public function execute(Builder $builder, string $column, CategorizedValues $values): void;
+
+    public function appendRelations(Builder $builder, string $column, CategorizedValues $values): void
+    {
+        [$relationName, $relatedColumn] = explode('.', $column);
+
+        $builder->orWhereHas($relationName, function (Builder $builder) use ($relatedColumn, $values) {
+            $this->execute($builder, $relatedColumn, $values);
+        });
+    }
 
     /**
+     * @param Builder $builder
      * @param $key
      * @param $values
      * @param $operator
      * @throws SearchException
      */
-    protected function lessOrMoreCallback($key, $values, $operator)
+    protected function lessOrMoreCallback(Builder $builder, $key, $values, $operator)
     {
         if (count($values) > 1) {
             throw new SearchException("[Search] Using $operator operator assumes one parameter only. Remove excess parameters.");
         }
 
-        $this->builder->where($key, $operator, $values[0]);
+        $builder->where($key, $operator, $values[0]);
     }
 
     /**
-     * TODO: move to a separate class
+     * @param Builder $builder
      * @param $key
      * @param $values
      * @param $operator
      * @throws SearchException
      */
-    protected function betweenCallback($key, $values, $operator)
+    protected function betweenCallback(Builder $builder, $key, $values, $operator)
     {
         if (count($values) != 2) {
             throw new SearchException("[Search] Using $operator operator assumes exactly 2 parameters. Wrong number of parameters provided.");
@@ -70,33 +100,6 @@ abstract class AbstractCallback
 
         $callback = $operator == '<>' ? 'whereBetween' : 'whereNotBetween';
 
-        $this->builder->{$callback}($key, [$values[0], $values[1]]);
-    }
-
-    /**
-     * @param string $splitValue
-     * @return bool
-     */
-    protected function isNegated(string $splitValue): bool
-    {
-        return substr($splitValue, 0, 1) === self::NOT;
-    }
-
-    /**
-     * @param string $value
-     * @return bool
-     */
-    protected function hasWildCard(string $value): bool
-    {
-        if (!$value) {
-            return false;
-        };
-
-        return $value[0] === self::LIKE || $value[strlen($value) - 1] === self::LIKE;
-    }
-
-    protected function replaceWildCard($value)
-    {
-        return str_replace(self::LIKE, '%', $value);
+        $builder->{$callback}($key, [$values[0], $values[1]]);
     }
 }

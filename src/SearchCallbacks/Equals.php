@@ -3,7 +3,7 @@
 namespace Voice\SearchQueryBuilder\SearchCallbacks;
 
 use Illuminate\Database\Eloquent\Builder;
-use Voice\SearchQueryBuilder\Exceptions\SearchException;
+use Voice\SearchQueryBuilder\CategorizedValues;
 
 class Equals extends AbstractCallback
 {
@@ -12,55 +12,29 @@ class Equals extends AbstractCallback
     /**
      * Execute a callback on a given column, providing the array of values
      *
-     * @throws SearchException
+     * @param Builder $builder
+     * @param string $column
+     * @param CategorizedValues $values
      */
-    public function execute(): void
+    public function execute(Builder $builder, string $column, CategorizedValues $values): void
     {
-        // $query->when(str_contains($column, '.'), callback1, callback2)
-
-        if (str_contains($this->searchModel->column, '.')) {
-
-            [$relationName, $relationAttribute] = explode('.', $this->searchModel->column);
-
-            $values = $this->searchModel->values;
-
-            // TODO: this of course doesn't work --- test test test
-            $this->builder->orWhereHas($relationName, function (Builder $query) use ($relationAttribute, $values) {
-                $query->where($relationAttribute, $values[0]);
-            });
-            return;
+        foreach ($values->andLike as $andLike) {
+            $builder->where($column, 'LIKE', $andLike);
         }
 
-
-        $andValues = [];
-        $notValues = [];
-
-        foreach ($this->searchModel->values as $value) {
-            if ($this->isNegated($value)) {
-                $value = str_replace('!', '', $value);
-
-                if ($this->hasWildCard($value)) {
-                    $this->builder->where($this->searchModel->column, 'NOT LIKE', $this->replaceWildCard($value));
-                    continue;
-                }
-
-                $notValues[] = $value;
-                continue;
-            }
-
-            if ($this->hasWildCard($value)) {
-                $this->builder->where($this->searchModel->column, 'LIKE', $this->replaceWildCard($value));
-                continue;
-            }
-
-            $andValues[] = $value;
+        foreach ($values->notLike as $notLike) {
+            $builder->where($column, 'NOT LIKE', $notLike);
         }
 
-        if (count($andValues) > 0) {
-            $this->builder->orWhereIn($this->searchModel->column, $andValues);
+        if ($values->null) {
+            $builder->whereNull($column);
         }
-        if (count($notValues) > 0) {
-            $this->builder->whereNotIn($this->searchModel->column, $notValues);
+
+        if ($values->notNull) {
+            $builder->whereNotNull($column);
         }
+
+        $builder->whereIn($column, $values->and);
+        $builder->whereNotIn($column, $values->not);
     }
 }

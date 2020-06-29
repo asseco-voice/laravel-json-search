@@ -4,22 +4,21 @@ namespace Voice\SearchQueryBuilder;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Voice\SearchQueryBuilder\Config\ModelConfig;
+use Voice\SearchQueryBuilder\Config\RequestParametersConfig;
 use Voice\SearchQueryBuilder\RequestParameters\AbstractParameter;
 
 class Searcher
 {
-    protected Builder     $builder;
-    protected Request     $request;
-    protected ModelConfig $modelConfig;
-    protected array       $requestParameters;
+    protected Builder                 $builder;
+    protected Request                 $request;
+    protected ModelConfig             $modelConfig;
+    protected RequestParametersConfig $requestParametersConfig;
 
     /*
      * TODO:
      * datum od danas toliko dana
-     * is null is not null
      *
      * relacije u query stringu, rekurzivno?
      * provjeri ACL
@@ -42,7 +41,7 @@ class Searcher
         $this->builder = $builder;
         $this->request = $request;
         $this->modelConfig = new ModelConfig($builder->getModel());
-        $this->requestParameters = Config::get('asseco-voice.search.registeredRequestParameters');
+        $this->requestParametersConfig = new RequestParametersConfig();
     }
 
     /**
@@ -63,7 +62,7 @@ class Searcher
      */
     protected function appendQueries(): void
     {
-        foreach ($this->requestParameters as $parameter) {
+        foreach ($this->requestParametersConfig->registered as $parameter) {
             $requestParameter = $this->createRequestParameter($parameter);
             $requestParameter->appendQuery();
         }

@@ -13,14 +13,15 @@ use Voice\SearchQueryBuilder\SearchCallbacks\LessThanOrEqual;
 use Voice\SearchQueryBuilder\SearchCallbacks\NotBetween;
 use Voice\SearchQueryBuilder\SearchCallbacks\NotEquals;
 use Voice\SearchQueryBuilder\Types\BooleanType;
-use Voice\SearchQueryBuilder\Types\DateTimeType;
-use Voice\SearchQueryBuilder\Types\NumericType;
-use Voice\SearchQueryBuilder\Types\TextType;
+use Voice\SearchQueryBuilder\Types\GenericType;
 
 return [
     'search' => [
 
-        'registeredRequestParameters' => [
+        /**
+         * Registered request parameters.
+         */
+        'requestParameters'      => [
             SearchParameter::class,
             ReturnsParameter::class,
             OrderByParameter::class,
@@ -28,58 +29,27 @@ return [
         ],
 
         /**
-         * Registered operators and types that can use them. Operator order matters!
+         * Registered operators/callbacks. Operator order matters!
          * Callbacks having more const OPERATOR characters must come before those with less.
          */
-        'operators'                   => [
-            NotBetween::class         => [
-                BooleanType::class,
-                DateTimeType::class,
-                NumericType::class,
-                TextType::class,
-            ],
-            LessThanOrEqual::class    => [
-                BooleanType::class,
-                DateTimeType::class,
-                NumericType::class,
-                TextType::class,
-            ],
-            GreaterThanOrEqual::class => [
-                BooleanType::class,
-                DateTimeType::class,
-                NumericType::class,
-                TextType::class,
-            ],
-            Between::class            => [
-                BooleanType::class,
-                DateTimeType::class,
-                NumericType::class,
-                TextType::class,
-            ],
-            NotEquals::class          => [
-                BooleanType::class,
-                DateTimeType::class,
-                NumericType::class,
-                TextType::class,
-            ],
-            Equals::class             => [
-                BooleanType::class,
-                DateTimeType::class,
-                NumericType::class,
-                TextType::class,
-            ],
-            LessThan::class           => [
-                BooleanType::class,
-                DateTimeType::class,
-                NumericType::class,
-                TextType::class,
-            ],
-            GreaterThan::class        => [
-                BooleanType::class,
-                DateTimeType::class,
-                NumericType::class,
-                TextType::class,
-            ],
+        'operators'              => [
+            NotBetween::class,
+            LessThanOrEqual::class,
+            GreaterThanOrEqual::class,
+            Between::class,
+            NotEquals::class,
+            Equals::class,
+            LessThan::class,
+            GreaterThan::class,
+        ],
+
+        /**
+         * Registered types. Generic type is the default one and should be used if
+         * no special care for type value is needed.
+         */
+        'types'                  => [
+            GenericType::class,
+            BooleanType::class,
         ],
 
         /**
@@ -87,7 +57,7 @@ return [
          * Searching by forbidden columns will throw an exception
          * This takes precedence before other exclusions.
          */
-        'globalForbiddenColumns'      => [
+        'globalForbiddenColumns' => [
             // 'id', 'created_at' ...
         ],
 
@@ -95,7 +65,7 @@ return [
          * Refined options for a single model.
          * Use if you want to enforce rules on a specific model without affecting globally all models
          */
-        'modelOptions'                => [
+        'modelOptions'           => [
 
             /**
              * For real usage, use real models without quotes. This is only meant to show the available options.

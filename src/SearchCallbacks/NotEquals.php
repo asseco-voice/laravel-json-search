@@ -2,7 +2,8 @@
 
 namespace Voice\SearchQueryBuilder\SearchCallbacks;
 
-use Voice\SearchQueryBuilder\Exceptions\SearchException;
+use Illuminate\Database\Eloquent\Builder;
+use Voice\SearchQueryBuilder\CategorizedValues;
 
 class NotEquals extends AbstractCallback
 {
@@ -11,28 +12,24 @@ class NotEquals extends AbstractCallback
     /**
      * Execute a callback on a given column, providing the array of values
      *
-     * @throws SearchException
+     * @param Builder $builder
+     * @param string $column
+     * @param CategorizedValues $values
      */
-    public function execute(): void
+    public function execute(Builder $builder, string $column, CategorizedValues $values): void
     {
-        $notValues = [];
-
-        foreach ($this->searchModel->values as $value) {
-            if ($this->isNegated($value)) {
-                $value = str_replace('!', '', $value);
-            }
-
-            if ($this->hasWildCard($value)) {
-                $this->builder->where($this->searchModel->column, 'NOT LIKE', $this->replaceWildCard($value));
-                continue;
-            }
-
-            $notValues[] = $value;
-            continue;
+        foreach (array_merge($values->andLike, $values->notLike) as $like) {
+            $builder->where($column, 'NOT LIKE', $like);
         }
 
-        if (count($notValues) > 0) {
-            $this->builder->whereNotIn($this->searchModel->column, $notValues);
+        if ($values->null) {
+            $builder->whereNull($column);
         }
+
+        if ($values->notNull) {
+            $builder->whereNotNull($column);
+        }
+
+        $builder->whereNotIn($column, array_merge($values->and, $values->not));
     }
 }

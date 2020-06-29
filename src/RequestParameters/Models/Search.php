@@ -3,6 +3,7 @@
 namespace Voice\SearchQueryBuilder\RequestParameters\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 use Voice\SearchQueryBuilder\Config\ModelConfig;
 use Voice\SearchQueryBuilder\Config\OperatorsConfig;
 use Voice\SearchQueryBuilder\Exceptions\SearchException;
@@ -70,6 +71,8 @@ class Search
         }
 
         $this->column = $split[0];
+        $this->checkForbidden($this->column);
+
         $this->values = $this->splitValues($this->column, $split[1]);
         $this->type = $this->getColumnType($this->column);
     }
@@ -109,9 +112,26 @@ class Search
         $columns = $this->modelConfig->getModelColumns();
 
         if (!array_key_exists($column, $columns)) {
-            throw new SearchException("[Search] Column $column is of unknown type, or it doesn't exist on a model.");
+            // TODO: integrate recursive column check for related models?
+            return 'generic';
         }
 
         return $columns[$column];
+    }
+
+    /**
+     * Check if global forbidden key is used
+     *
+     * @param string $parameter
+     * @throws SearchException
+     */
+    protected function checkForbidden(string $parameter)
+    {
+        $forbiddenKeys = Config::get('asseco-voice.search.globalForbiddenColumns');
+        $forbiddenKeys = $this->modelConfig->getForbidden($forbiddenKeys);
+
+        if (in_array($parameter, $forbiddenKeys)) {
+            throw new SearchException("[Search] Searching by '$parameter' field is forbidden. Check the configuration if this is not a desirable behavior.");
+        }
     }
 }
