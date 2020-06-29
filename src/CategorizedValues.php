@@ -111,6 +111,6 @@ class CategorizedValues
 
     protected function replaceNegation($value)
     {
-        return preg_replace(self::NOT, '', $value, 1);
+        return preg_replace("~" . self::NOT . "~", '', $value, 1);
     }
 }

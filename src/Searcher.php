@@ -20,14 +20,9 @@ class Searcher
      * TODO:
      * datum od danas toliko dana
      *
-     * relacije u query stringu, rekurzivno?
-     * provjeri ACL
-     *
      * paginacija
      *
      * or/and?
-     *
-     * https://freek.dev/1182-searching-models-using-a-where-like-query-in-laravel
      */
 
     /**

@@ -71,35 +71,61 @@ abstract class AbstractCallback
 
     /**
      * @param Builder $builder
-     * @param $key
-     * @param $values
-     * @param $operator
+     * @param string $column
+     * @param CategorizedValues $values
+     * @param string $operator
      * @throws SearchException
      */
-    protected function lessOrMoreCallback(Builder $builder, $key, $values, $operator)
+    protected function lessOrMoreCallback(Builder $builder, string $column, CategorizedValues $values, string $operator)
     {
-        if (count($values) > 1) {
+        $this->checkAllowedValues($values, $operator);
+
+        if (count($values->and) > 1) {
             throw new SearchException("[Search] Using $operator operator assumes one parameter only. Remove excess parameters.");
         }
 
-        $builder->where($key, $operator, $values[0]);
+        if (!$values->and) {
+            throw new SearchException("[Search] No valid arguments for '$operator' operator.");
+        }
+
+        $builder->where($column, $operator, $values->and[0]);
     }
 
     /**
      * @param Builder $builder
-     * @param $key
-     * @param $values
-     * @param $operator
+     * @param string $column
+     * @param CategorizedValues $values
+     * @param string $operator
      * @throws SearchException
      */
-    protected function betweenCallback(Builder $builder, $key, $values, $operator)
+    protected function betweenCallback(Builder $builder, string $column, CategorizedValues $values, string $operator)
     {
-        if (count($values) != 2) {
+        $this->checkAllowedValues($values, $operator);
+
+        if (count($values->and) != 2) {
             throw new SearchException("[Search] Using $operator operator assumes exactly 2 parameters. Wrong number of parameters provided.");
+        }
+
+        if (!count($values->and)) {
+            throw new SearchException("[Search] No valid arguments for '$operator' operator.");
         }
 
         $callback = $operator == '<>' ? 'whereBetween' : 'whereNotBetween';
 
-        $builder->{$callback}($key, [$values[0], $values[1]]);
+        $builder->{$callback}($column, [$values->and[0], $values->and[1]]);
+    }
+
+    /**
+     * Should throw exception if anything except '$values->and' is filled out.
+     *
+     * @param CategorizedValues $values
+     * @param string $operator
+     * @throws SearchException
+     */
+    protected function checkAllowedValues(CategorizedValues $values, string $operator): void
+    {
+        if ($values->null || $values->notNull || $values->not || $values->notLike || $values->andLike) {
+            throw new SearchException("[Search] Wrong parameter type(s) for '$operator' operator.");
+        }
     }
 }
