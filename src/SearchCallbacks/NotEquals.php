@@ -30,6 +30,8 @@ class NotEquals extends AbstractCallback
             $builder->whereNotNull($column);
         }
 
-        $builder->whereNotIn($column, array_merge($values->and, $values->not));
+        if (array_merge($values->and, $values->not)) {
+            $builder->whereNotIn($column, array_merge($values->and, $values->not));
+        }
     }
 }
