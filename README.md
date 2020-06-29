@@ -7,8 +7,8 @@ PHP min version: 7.4.
 
 ## Installation
 
-Package is installed through composer and is automatically registered
-as a Laravel service provider.
+Install the package through composer. It is automatically registered
+as a Laravel service provider, so no additional actions are required.
 
 ``composer require asseco-voice/laravel-search-query-builder``
 
@@ -17,35 +17,24 @@ as a Laravel service provider.
 This package is meant to provide an additional ``search`` method on already existing 
 Eloquent models and does not require any additional actions to be done on models.
 It functions out-of-the-box automatically for all Eloquent models within the project.
- 
-In order to use it you can call:
+
+For example, you can create a search endpoint and append the following query string
+to it:
 
 ```
-SomeModel::search($request)->get()
+www.example.com/search?search=(first_name=foo;bar;!baz\last_name=test)
 ```
 
-Where ``$request`` is meant to be a full `Illuminate\Http\Request` object.
-So when called within a controller it would for example look like:
+Inside the controller you can call it like this:
 
     public function search(Request $request)
     {
         return SomeModel::search($request)->get();
     }
     
-It is assumed that Request object contains query string parameters which
-are using a specific search logic explained below.
+Where ``$request`` is meant to be a full `Illuminate\Http\Request` object.
 
-Quickly starting though, you can try out a simple query string example:
-
-```
-?search=(first_name=foo;bar;!baz\last_name=test)
-```
-
-- ``keys`` - `first_name` and `last_name`
-- ``operators`` - `=`
-- ``values`` - `foo`, `bar`, `baz`, `test`
-
-Will perform a ``SELECT * FROM some_table WHERE first_name IN ('foo, 'bar') 
+This will perform a ``SELECT * FROM some_table WHERE first_name IN ('foo, 'bar') 
 AND first_name not in ('baz') or last_name in ('test')``.
 
 ## Dev naming conventions for this package
@@ -66,19 +55,21 @@ all other are optional.
 - ``returns`` - will return only the columns provided as values (underlying logic is that 
 it actually does `SELECT /keys/ FROM` instead of `SELECT * FROM`)
 - ``order-by`` - will order the results based on values provided
+- ``relations`` - will load the relations for the given model.
 
 ### Search
 
-The logic is done in a ``(key operator values)`` fashion in which we assume the 
+The logic is done in a ``(column operator values)`` fashion in which we assume the 
 following:
 
 - ``( ... )`` - everything needs to be enclosed within parenthesis
-- `key` represents a column in the database. Multiple keys can be separated with a 
-backslash ``\`` i.e. `(key=value\key2=value2)`.
+- `column` represents a column in the database. Multiple keys can be separated with a 
+backslash ``\`` i.e. `(column=value\column2=value2)`. It is possible to search by related
+models using ``.`` as a divider i.e. `(relation.column=value)`.
 - ``operator`` is one of the available main operators for querying (listed below)
 - ``values`` is a semicolon (`;`) separated list of values 
-(i.e. `(key=value;value2;value3)`) which
-can have micro-operators on them as well (i.e. `key=value;!value2;*value3*`). 
+(i.e. `(column=value;value2;value3)`) which
+can have micro-operators on them as well (i.e. `column=value;!value2;*value3*`). 
 
 #### Main operators
 
@@ -124,8 +115,8 @@ the same as ``key=!value1;!value2``.
 Using a ``returns`` key will effectively only return the fields given within it.
 This key is not mandatory, however using it does require following the convention
 used. Everything needs to be enclosed within parenthesis ``( ... )``, and separating
-values is done in the same fashion as with values within a ``search`` parameter 
-- with a backslash ``\``.
+values is done in the same fashion as with values within a ``search`` parameter; 
+with a backslash ``\``.
 
 Example:
 
@@ -158,7 +149,7 @@ It is possible to load object relations as well by using ``relations`` parameter
 Same convention is followed:
 
 ```
-?...&returns=(...\...)
+?...&relations=(...\...)
 ```
 
 Relations, if defined properly and following Laravel convention, should be predictable
@@ -169,9 +160,17 @@ name is thus 'addresses')
 - M:1 - relation name is in singular (i.e. Comment belongs to a **Post**, relation
 name is thus 'post')
 
+It is possible to recursively load relations using dot notation. 
+
+I.e. ``&relations=(contact)`` will load contact relations, using `&relations=(contact.title)`
+will load contact and load titles within contacts. It is also possible to load
+multiple second level relations by using for example 
+``&relations=(contact.title\contact.media)`` which will load contact as a main relation,
+and title and media as a contact relation.
+
 ## Config 
 
-Besides standard query string search, it is possible to provide additional 
+Aside from standard query string search, it is possible to provide additional 
 package configuration.
 
 Publish the configuration by running 
