@@ -45,7 +45,11 @@ class TypesConfig extends SearchConfig
         $mapping = $this->nameClassMapping();
 
         if(!array_key_exists($typeName, $mapping)){
-            throw new SearchException("[Search] No valid callback for '$typeName' type.");
+            if(!array_key_exists('generic', $mapping)){
+                throw new SearchException("[Search] No valid callback for '$typeName' type.");
+            }
+
+            return new $mapping['generic'];
         }
 
         return new $mapping[$typeName];
