@@ -47,7 +47,7 @@ class Searcher
     public function search(): void
     {
         $this->appendQueries();
-        Log::info('[Search] SQL: ' . $this->builder->toSql());
+        Log::info('[Search] SQL: ' . $this->builder->toSql() . " Bindings: " . implode(', ', $this->builder->getBindings()));
     }
 
     /**
