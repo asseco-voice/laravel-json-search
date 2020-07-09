@@ -21,11 +21,22 @@ abstract class AbstractParameter
     public Builder     $builder;
     public ModelConfig $modelConfig;
 
+    /**
+     * AbstractParameter constructor.
+     * @param Request $request
+     * @param Builder $builder
+     * @param ModelConfig $modelConfig
+     * @throws SearchException
+     */
     public function __construct(Request $request, Builder $builder, ModelConfig $modelConfig)
     {
         $this->request = $request;
         $this->builder = $builder;
         $this->modelConfig = $modelConfig;
+
+        if ($this->builder->getModel()->exists) {
+            throw new SearchException("[Search] Searching is not allowed on already loaded models.");
+        }
     }
 
     /**

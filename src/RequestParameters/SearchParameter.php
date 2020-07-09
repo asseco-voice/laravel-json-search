@@ -2,7 +2,6 @@
 
 namespace Voice\SearchQueryBuilder\RequestParameters;
 
-use Illuminate\Support\Facades\Config;
 use Voice\SearchQueryBuilder\Config\OperatorsConfig;
 use Voice\SearchQueryBuilder\Exceptions\SearchException;
 use Voice\SearchQueryBuilder\RequestParameters\Models\Search;
