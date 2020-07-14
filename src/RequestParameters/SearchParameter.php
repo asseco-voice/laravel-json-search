@@ -9,19 +9,11 @@ use Voice\SearchQueryBuilder\SearchCallbacks\AbstractCallback;
 
 class SearchParameter extends AbstractParameter
 {
-    /**
-     * Get name by which the parameter will be fetched
-     * @return string
-     */
     public function getParameterName(): string
     {
         return 'search';
     }
 
-    /**
-     * Append the query to Eloquent builder
-     * @throws SearchException
-     */
     public function appendQuery(): void
     {
         $arguments = $this->getArguments();

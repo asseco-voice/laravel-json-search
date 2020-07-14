@@ -21,7 +21,7 @@ class SearchServiceProvider extends ServiceProvider
              */
             $searcher = new Searcher($this, $request);
             $searcher->search();
-            //dd($this->dump());
+
             return $this;
         });
     }

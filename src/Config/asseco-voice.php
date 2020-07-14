@@ -1,5 +1,7 @@
 <?php
 
+use Voice\SearchQueryBuilder\RequestParameters\LimitParameter;
+use Voice\SearchQueryBuilder\RequestParameters\OffsetParameter;
 use Voice\SearchQueryBuilder\RequestParameters\OrderByParameter;
 use Voice\SearchQueryBuilder\RequestParameters\RelationsParameter;
 use Voice\SearchQueryBuilder\RequestParameters\ReturnsParameter;
@@ -25,7 +27,9 @@ return [
             SearchParameter::class,
             ReturnsParameter::class,
             OrderByParameter::class,
-            RelationsParameter::class
+            RelationsParameter::class,
+            LimitParameter::class,
+            OffsetParameter::class,
         ],
 
         /**

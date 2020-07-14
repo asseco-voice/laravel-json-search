@@ -9,19 +9,11 @@ class OrderByParameter extends AbstractParameter
 {
     const VALUE_DELIMITER = '=';
 
-    /**
-     * Get name by which the parameter will be fetched
-     * @return string
-     */
     public function getParameterName(): string
     {
         return 'order-by';
     }
 
-    /**
-     * Append the query to Eloquent builder
-     * @throws SearchException
-     */
     public function appendQuery(): void
     {
         $arguments = $this->getArguments();
@@ -59,13 +51,6 @@ class OrderByParameter extends AbstractParameter
         return new OrderBy($splitArgument);
     }
 
-    /**
-     * Provide additional method as a fallback if query string argument is not present.
-     * Empty array is a valid default, meaning no fallback is available.
-     * Override if fallback is needed.
-     *
-     * @return array
-     */
     protected function fetchAlternative(): array
     {
         return $this->modelConfig->getOrderBy();

@@ -3,6 +3,9 @@
 This package enables ``search`` method on Eloquent models for 
 Laravel 7 to enable detailed DB search through URL query string. 
 
+It functions out-of-the-box automatically for all Eloquent models 
+within the project. No additional setup is needed.
+
 PHP min version: 7.4.
 
 ## Installation
@@ -14,48 +17,54 @@ as a Laravel service provider, so no additional actions are required.
 
 ## Quick usage
 
-This package is meant to provide an additional ``search`` method on already existing 
-Eloquent models and does not require any additional actions to be done on models.
-It functions out-of-the-box automatically for all Eloquent models within the project.
+Create a GET search endpoint
 
-For example, you can create a search endpoint and append the following query string
-to it:
+```
+Route::get('search', 'ExampleController@search');
+```
+
+Call the method within the controller and forward a full `Illuminate\Http\Request` object to the search method.
+
+```
+public function search(Request $request)
+{
+    return SomeModel::search($request)->get();
+}
+```
+ 
+Call the endpoint providing the query string:
 
 ```
 www.example.com/search?search=(first_name=foo;bar;!baz\last_name=test)
 ```
-
-Inside the controller you can call it like this:
-
-    public function search(Request $request)
-    {
-        return SomeModel::search($request)->get();
-    }
     
-Where ``$request`` is meant to be a full `Illuminate\Http\Request` object.
-
 This will perform a ``SELECT * FROM some_table WHERE first_name IN ('foo, 'bar') 
 AND first_name not in ('baz') or last_name in ('test')``.
 
 ## Dev naming conventions for this package
 
 - **parameter** is a query string key name (i.e. `?key=...`)
-- **arguments** are considered to be query string values (i.e. `?key=( ... value ...)`),
+- **arguments** are query string values (i.e. `?key=( ... value ...)`),
 or more precisely everything coming after ``=`` sign after query string key
     - **argument** is a single key-value pair within parameter values
 (i.e. `?key=( key=value, key=value )`). 
-        -  single argument is broken down to **column / operator / value** 
+        -  single argument is further broken down to **column / operator / value** 
 
 ## Parameter breakdown
 Parameters follow a special logic to query the DB. It is possible to use the following
 query string parameters (keys):
 
-- ``search`` - will perform the querying logic. **This key is mandatory** to have, 
-all other are optional.
+- ``search`` - will perform the querying logic (explained in detail below)
 - ``returns`` - will return only the columns provided as values (underlying logic is that 
 it actually does `SELECT /keys/ FROM` instead of `SELECT * FROM`)
 - ``order-by`` - will order the results based on values provided
 - ``relations`` - will load the relations for the given model.
+- `limit` - will limit the results returned
+- `offset` - will return a subset of results starting from a point given. This parameter MUST
+be used together with ``limit`` parameter. 
+
+Parameters can be chained in the same fashion the query strings are chained i.e. 
+``?search=(...)&returns=(...)&odrer-by=(...)``.
 
 ### Search
 
@@ -113,15 +122,14 @@ the same as ``key=!value1;!value2``.
 ### Returns
 
 Using a ``returns`` key will effectively only return the fields given within it.
-This key is not mandatory, however using it does require following the convention
-used. Everything needs to be enclosed within parenthesis ``( ... )``, and separating
+Everything needs to be enclosed within parenthesis ``( ... )``, and separating
 values is done in the same fashion as with values within a ``search`` parameter; 
 with a backslash ``\``.
 
 Example:
 
 ```
-?search=(...)&returns=(first_name\last_name)
+?returns=(first_name\last_name)
 ```
 
 Will perform a ``SELECT first_name, last_name FROM ...``
@@ -135,7 +143,7 @@ matters!
 Example:
 
 ```
-?search=(...)&order-by=(first_name\last_name=desc)
+?order-by=(first_name\last_name=desc)
 ```
 
 Will perform a ``SELECT ... ORDER BY first_name asc, last_name desc``
@@ -149,7 +157,7 @@ It is possible to load object relations as well by using ``relations`` parameter
 Same convention is followed:
 
 ```
-?...&relations=(...\...)
+?relations=(...\...)
 ```
 
 Relations, if defined properly and following Laravel convention, should be predictable
@@ -162,11 +170,33 @@ name is thus 'post')
 
 It is possible to recursively load relations using dot notation. 
 
-I.e. ``&relations=(contact)`` will load contact relations, using `&relations=(contact.title)`
+I.e. ``?relations=(contact)`` will load contact relations, using `?relations=(contact.title)`
 will load contact and load titles within contacts. It is also possible to load
 multiple second level relations by using for example 
-``&relations=(contact.title\contact.media)`` which will load contact as a main relation,
+``?relations=(contact.title\contact.media)`` which will load contact as a main relation,
 and title and media as a contact relation.
+
+### Limit
+
+You can limit the number of results fetched by doing:
+
+```
+?limit=10
+```
+
+This will do a ``SELECT * FROM table LIMIT 10``.
+
+### Offset
+
+You can use offset to further limit the returned results, however it
+requires using limit alongside it. 
+
+```
+?limit=10&offset=5
+```
+
+This will do a ``SELECT * FROM table LIMIT 10 OFFSET 5``.
+
 
 ## Config 
 

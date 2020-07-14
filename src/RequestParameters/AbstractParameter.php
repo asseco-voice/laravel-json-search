@@ -21,6 +21,8 @@ abstract class AbstractParameter
     public Builder     $builder;
     public ModelConfig $modelConfig;
 
+    private string $parameterName;
+
     /**
      * AbstractParameter constructor.
      * @param Request $request
@@ -33,6 +35,7 @@ abstract class AbstractParameter
         $this->request = $request;
         $this->builder = $builder;
         $this->modelConfig = $modelConfig;
+        $this->parameterName = $this->getParameterName();
 
         if ($this->builder->getModel()->exists) {
             throw new SearchException("[Search] Searching is not allowed on already loaded models.");
@@ -65,22 +68,36 @@ abstract class AbstractParameter
      */
     protected function getArguments(): array
     {
-        $parameterName = $this->getParameterName();
-
-        if (!$this->request->has($parameterName)) {
+        if (!$this->request->has($this->parameterName)) {
             return $this->fetchAlternative();
         }
 
-        $input = $this->request->query($parameterName);
-        $matched = $this->matchWithinParenthesis($input, $parameterName);
+        $input = $this->request->query($this->parameterName);
+        $matched = $this->matchWithinParenthesis($input, $this->parameterName);
         $explodedParameters = explode(self::ARGUMENT_SEPARATOR, $matched[1]);
         $parameters = $this->removeEmptyValues($explodedParameters);
 
         if (count($parameters) < 1) {
-            throw new SearchException("[Search] Couldn't match parameters for '$parameterName' query string. Input found: $input. Did you include anything within parenthesis?");
+            throw new SearchException("[Search] Couldn't match parameters for '$this->parameterName' query string. Input found: $input. Did you include anything within parenthesis?");
         }
 
         return $parameters;
+    }
+
+    /**
+     * Get a simple query string parameter value which is in parameter=value form.
+     * This is a standard query string without parenthesis and other logic.
+     *
+     * @return string
+     * @throws SearchException
+     */
+    protected function getParameterValue(): string
+    {
+        if (!$this->request->has($this->parameterName)) {
+            return '';
+        }
+
+        return $this->request->query($this->parameterName);
     }
 
     /**
