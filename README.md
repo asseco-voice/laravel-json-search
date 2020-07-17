@@ -62,6 +62,7 @@ it actually does `SELECT /keys/ FROM` instead of `SELECT * FROM`)
 - `limit` - will limit the results returned
 - `offset` - will return a subset of results starting from a point given. This parameter MUST
 be used together with ``limit`` parameter. 
+- `count` - will return record count
 
 Parameters can be chained in the same fashion the query strings are chained i.e. 
 ``?search=(...)&returns=(...)&odrer-by=(...)``.
@@ -197,6 +198,15 @@ requires using limit alongside it.
 
 This will do a ``SELECT * FROM table LIMIT 10 OFFSET 5``.
 
+### Count
+
+You can fetch count of records instead of concrete records by adding the count key:
+
+```
+?count
+```
+
+This will do a ``SELECT count(*) FROM table``.
 
 ## Config 
 
