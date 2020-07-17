@@ -168,6 +168,8 @@ to assume:
 name is thus 'addresses')
 - M:1 - relation name is in singular (i.e. Comment belongs to a **Post**, relation
 name is thus 'post')
+- **important** loading relations with more than 1 word should be fetched using **camelCase** which 
+will in turn get the relation back as a snake_case equivalent in the JSON response 
 
 It is possible to recursively load relations using dot notation. 
 
