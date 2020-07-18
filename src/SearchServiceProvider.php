@@ -3,8 +3,8 @@
 namespace Voice\SearchQueryBuilder;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
+use Voice\JsonQueryBuilder\JsonQuery;
 
 class SearchServiceProvider extends ServiceProvider
 {
@@ -13,15 +13,13 @@ class SearchServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([__DIR__ . '/Config/asseco-voice.php' => config_path('asseco-voice.php'),]);
-
-        Builder::macro('search', function (Request $request) {
+        Builder::macro('search', function (array $input) {
             /**
              * @var $this Builder
              */
-            $searcher = new Searcher($this, $request);
-            $searcher->search();
-
+            $jsonQuery = new JsonQuery($this, $input);
+            $jsonQuery->search();
+            //dd($this->dump());
             return $this;
         });
     }
@@ -31,7 +29,7 @@ class SearchServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/Config/asseco-voice.php', 'asseco-voice');
+
     }
 
 }
