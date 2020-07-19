@@ -1,6 +1,6 @@
 <?php
 
-namespace Voice\SearchQueryBuilder;
+namespace Voice\JsonSearch;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\ServiceProvider;

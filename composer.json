@@ -1,6 +1,6 @@
 {
-    "name": "asseco-voice/laravel-search-query-builder",
-    "description": "Laravel search query builder",
+    "name": "asseco-voice/laravel-json-search",
+    "description": "Laravel JSON search",
     "keywords": [
         "php",
         "laravel"
@@ -19,13 +19,13 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "Voice\\SearchQueryBuilder\\": "src/"
+            "Voice\\JsonSearch\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Voice\\SearchQueryBuilder\\SearchServiceProvider"
+                "Voice\\JsonSearch\\SearchServiceProvider"
             ]
         }
     }

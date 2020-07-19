@@ -1,4 +1,4 @@
-# Laravel search query builder
+# Laravel JSON search
 
 This package enables ``search`` method on Eloquent models for 
 Laravel 7 to enable detailed DB search through URL query string. 
@@ -13,7 +13,7 @@ PHP min version: 7.4.
 Install the package through composer. It is automatically registered
 as a Laravel service provider, so no additional actions are required.
 
-``composer require asseco-voice/laravel-search-query-builder``
+``composer require asseco-voice/laravel-json-search``
 
 ## Quick usage
 
@@ -52,6 +52,6 @@ Aside from standard query string search, it is possible to provide additional
 package configuration.
 
 Publish the configuration by running 
-`php artisan vendor:publish --provider="Voice\SearchQueryBuilder\SearchServiceProvider"`.
+`php artisan vendor:publish --provider="Voice\JsonSearch\SearchServiceProvider"`.
 
 All the keys within the configuration file have a detailed explanation above each key.
