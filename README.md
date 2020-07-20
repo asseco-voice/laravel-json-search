@@ -44,6 +44,9 @@ Call the endpoint providing the following JSON:
 This will perform a ``SELECT * FROM some_table WHERE first_name IN ('foo, 'bar') 
 AND first_name not in ('baz') or last_name in ('test')``.
 
+If you'd like to see query called instead of a result, uncomment ``dump`` line
+within ``Voice\JsonSearch\SearchServiceProvider``.
+
 ## In depth
 
 For detailed engine usage and logic, refer to 
