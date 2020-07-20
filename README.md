@@ -1,12 +1,10 @@
 # Laravel JSON search
 
-This package enables ``search`` method on Eloquent models for 
-Laravel 7 to enable detailed DB search through URL query string. 
+This package enables ``search`` method on Laravel Eloquent models
+providing a detailed DB search with JSON as input parameter. 
 
 It functions out-of-the-box automatically for all Eloquent models 
 within the project. No additional setup is needed.
-
-PHP min version: 7.4.
 
 ## Installation
 
@@ -17,25 +15,30 @@ as a Laravel service provider, so no additional actions are required.
 
 ## Quick usage
 
-Create a GET search endpoint
+Create a POST search endpoint
 
 ```
-Route::get('search', 'ExampleController@search');
+Route::post('search', 'ExampleController@search');
 ```
 
-Call the method within the controller and forward a full `Illuminate\Http\Request` object to the search method.
+Call the method within the controller and provide it with input parameters from JSON body.
 
 ```
 public function search(Request $request)
 {
-    return SomeModel::search($request)->get();
+    return SomeModel::search($request->all())->get();
 }
 ```
  
-Call the endpoint providing the query string:
+Call the endpoint providing the following JSON:
 
 ```
-www.example.com/search?search=(first_name=foo;bar;!baz\last_name=test)
+{
+    "search": {
+        "first_name": "=foo;bar;!baz",
+        "last_name": "=test"
+    }
+}
 ```
     
 This will perform a ``SELECT * FROM some_table WHERE first_name IN ('foo, 'bar') 
@@ -45,13 +48,3 @@ AND first_name not in ('baz') or last_name in ('test')``.
 
 For detailed engine usage and logic, refer to 
 [this readme](https://github.com/asseco-voice/laravel-json-query-builder).
-
-## Config 
-
-Aside from standard query string search, it is possible to provide additional 
-package configuration.
-
-Publish the configuration by running 
-`php artisan vendor:publish --provider="Voice\JsonSearch\SearchServiceProvider"`.
-
-All the keys within the configuration file have a detailed explanation above each key.
