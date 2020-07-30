@@ -1,6 +1,6 @@
 # Laravel JSON search
 
-This package enables ``search`` method on Laravel Eloquent models
+This package exposes a ``search`` method on Laravel Eloquent models
 providing a detailed DB search with JSON as input parameter. 
 
 It functions out-of-the-box automatically for all Eloquent models 
