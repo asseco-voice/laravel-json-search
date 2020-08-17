@@ -51,3 +51,12 @@ within ``Voice\JsonSearch\SearchServiceProvider``.
 
 For detailed engine usage and logic, refer to 
 [this readme](https://github.com/asseco-voice/laravel-json-query-builder).
+
+## Search favorites
+
+By default, favorites are disabled. To enable them, set the ``SEARCH_FAVORITES_ENABLED`` 
+in your `.env` file to `true`.
+
+Favorites enable you to save searches for a specific user, so after you enable them through
+``.env`` you need to run `php artisan migrate`, and routes for favorites will be exposed 
+automatically. 
