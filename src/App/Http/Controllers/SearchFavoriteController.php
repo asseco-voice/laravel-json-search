@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Voice\JsonSearch\App\Http\Controllers;
 
-use App\Http\Controllers\Controller; // Stock Laravel controller class
+use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Voice\JsonSearch\App\SearchFavorite;
 
 class SearchFavoriteController extends Controller
@@ -15,9 +18,9 @@ class SearchFavoriteController extends Controller
      *
      * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        return response()->json(SearchFavorite::all());
+        return Response::json(SearchFavorite::all());
     }
 
     /**
@@ -26,11 +29,11 @@ class SearchFavoriteController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        $searchFavorite = SearchFavorite::create($request->all());
+        $searchFavorite = SearchFavorite::query()->create($request->all());
 
-        return response()->json($searchFavorite);
+        return Response::json($searchFavorite);
     }
 
     /**
@@ -39,9 +42,9 @@ class SearchFavoriteController extends Controller
      * @param SearchFavorite $searchFavorite
      * @return JsonResponse
      */
-    public function show(SearchFavorite $searchFavorite)
+    public function show(SearchFavorite $searchFavorite): JsonResponse
     {
-        return response()->json($searchFavorite);
+        return Response::json($searchFavorite);
     }
 
     /**
@@ -51,11 +54,11 @@ class SearchFavoriteController extends Controller
      * @param SearchFavorite $searchFavorite
      * @return JsonResponse
      */
-    public function update(Request $request, SearchFavorite $searchFavorite)
+    public function update(Request $request, SearchFavorite $searchFavorite): JsonResponse
     {
         $isUpdated = $searchFavorite->update($request->all());
 
-        return response()->json($isUpdated);
+        return Response::json($isUpdated ? 'true' : 'false');
     }
 
     /**
@@ -65,10 +68,10 @@ class SearchFavoriteController extends Controller
      * @return JsonResponse
      * @throws Exception
      */
-    public function destroy(SearchFavorite $searchFavorite)
+    public function destroy(SearchFavorite $searchFavorite): JsonResponse
     {
         $isDeleted = $searchFavorite->delete();
 
-        return response()->json($isDeleted);
+        return Response::json($isDeleted ? 'true' : 'false');
     }
 }

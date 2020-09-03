@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Voice\JsonSearch;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -12,7 +14,7 @@ class SearchServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/asseco-search.php', 'asseco-search');
 
@@ -27,7 +29,7 @@ class SearchServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot()
+    public function boot(): void
     {
         $this->publishes([__DIR__ . '/Config/asseco-search.php' => config_path('asseco-search.php'),]);
 
