@@ -14,13 +14,13 @@ class SearchServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/Config/asseco-search.php', 'asseco-search');
+        $this->mergeConfigFrom(__DIR__ . '/../config/asseco-search.php', 'asseco-search');
 
         $favoritesEnabled = Config::get('asseco-search.search_favorites_enabled');
 
         if ($favoritesEnabled) {
-            $this->loadMigrationsFrom(__DIR__ . '/Database/migrations');
-            $this->loadRoutesFrom(__DIR__ . '/Routes/api.php');
+            $this->loadMigrationsFrom(__DIR__ . '/../migrations');
+            $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
         }
     }
 
