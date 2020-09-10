@@ -24,6 +24,6 @@ Route::namespace('Voice\JsonSearch\App\Http\Controllers')
         Route::put('search/{model}/update', [SearchController::class, 'update'])->name('search.update');
         Route::delete('search/{model}', [SearchController::class, 'destroy'])->name('search.destroy');
 
-        Route::apiResource('search-favorites', SearchFavoriteController::class);
+        Route::apiResource('search-favorites', 'SearchFavoriteController');
 
     });
