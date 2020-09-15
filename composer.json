@@ -9,8 +9,8 @@
     "require": {
         "php": "^7.4",
         "asseco-voice/laravel-json-query-builder": "dev-master",
-        "illuminate/support": "^7.17",
-        "illuminate/database": "^7.17"
+        "illuminate/support": "^8.0",
+        "illuminate/database": "^8.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0",
