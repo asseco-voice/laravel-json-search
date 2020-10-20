@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Voice\JsonSearch\App\Http\Controllers\SearchController;
-use Voice\JsonSearch\App\Http\Controllers\SearchFavoriteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,11 +18,9 @@ Route::namespace('Voice\JsonSearch\App\Http\Controllers')
     ->prefix('api')
     ->middleware('api')
     ->group(function () {
-
         Route::post('search/{model}', [SearchController::class, 'index'])->name('search.index');
         Route::put('search/{model}/update', [SearchController::class, 'update'])->name('search.update');
         Route::delete('search/{model}', [SearchController::class, 'destroy'])->name('search.destroy');
 
         Route::apiResource('search-favorites', 'SearchFavoriteController');
-
     });

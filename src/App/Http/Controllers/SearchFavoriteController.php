@@ -27,6 +27,7 @@ class SearchFavoriteController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function store(Request $request): JsonResponse
@@ -40,6 +41,7 @@ class SearchFavoriteController extends Controller
      * Display the specified resource.
      *
      * @param SearchFavorite $searchFavorite
+     *
      * @return JsonResponse
      */
     public function show(SearchFavorite $searchFavorite): JsonResponse
@@ -50,8 +52,9 @@ class SearchFavoriteController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param Request        $request
      * @param SearchFavorite $searchFavorite
+     *
      * @return JsonResponse
      */
     public function update(Request $request, SearchFavorite $searchFavorite): JsonResponse
@@ -65,8 +68,10 @@ class SearchFavoriteController extends Controller
      * Remove the specified resource from storage.
      *
      * @param SearchFavorite $searchFavorite
-     * @return JsonResponse
+     *
      * @throws Exception
+     *
+     * @return JsonResponse
      */
     public function destroy(SearchFavorite $searchFavorite): JsonResponse
     {
