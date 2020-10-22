@@ -15,8 +15,7 @@ use Voice\JsonSearch\App\Http\Controllers\SearchFavoriteController;
 |
 */
 
-Route::namespace('Voice\JsonSearch\App\Http\Controllers')
-    ->prefix('api')
+Route::prefix('api')
     ->middleware('api')
     ->group(function () {
         Route::post('search/{model}', [SearchController::class, 'index'])->name('search.index');
