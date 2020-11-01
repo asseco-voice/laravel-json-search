@@ -87,6 +87,12 @@ class SearchController extends Controller
      */
     protected function extractModelClass(string $modelName): Model
     {
+        $mapping = Config::get('asseco-search.model_mapping');
+
+        if(in_array($modelName, $mapping)){
+            return new $mapping[$modelName];
+        }
+
         $namespaces = Config::get('asseco-search.models_namespaces');
 
         $formattedModelName = Str::studly(Str::singular($modelName));
