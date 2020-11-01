@@ -89,8 +89,8 @@ class SearchController extends Controller
     {
         $mapping = Config::get('asseco-search.model_mapping');
 
-        if(in_array($modelName, $mapping)){
-            return new $mapping[$modelName];
+        if (in_array($modelName, $mapping)) {
+            return new $mapping[$modelName]();
         }
 
         $namespaces = Config::get('asseco-search.models_namespaces');
