@@ -89,7 +89,7 @@ class SearchController extends Controller
     {
         $mapping = Config::get('asseco-search.model_mapping');
 
-        if(in_array($modelName, $mapping)){
+        if(array_key_exists($modelName, $mapping)){
             return new $mapping[$modelName];
         }
 
