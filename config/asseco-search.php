@@ -8,7 +8,7 @@ return [
     'search_favorites_enabled' => env('SEARCH_FAVORITES_ENABLED', false) === true,
 
     /**
-     * Directly map a model name to a class. This takes precedence over model_namespaces
+     * Directly map a model name to a class. This takes precedence over model_namespaces.
      */
     'model_mapping' => [
         // 'model' => Model::class,
