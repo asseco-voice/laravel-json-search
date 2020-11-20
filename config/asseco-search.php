@@ -1,5 +1,7 @@
 <?php
 
+use Voice\JsonSearch\App\SearchFavorite;
+
 return [
     /**
      * If favorites are enabled, migrations and routes for this feature
@@ -21,4 +23,6 @@ return [
     'models_namespaces'        => [
         'App',
     ],
+
+    'search_favorite_model' => SearchFavorite::class,
 ];

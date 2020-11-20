@@ -8,11 +8,19 @@ use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 use Voice\JsonSearch\App\SearchFavorite;
 
 class SearchFavoriteController extends Controller
 {
+    public SearchFavorite $favorite;
+
+    public function __construct()
+    {
+        $this->favorite = Config::get('asseco-search.search_favorite_model');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +28,7 @@ class SearchFavoriteController extends Controller
      */
     public function index(): JsonResponse
     {
-        return Response::json(SearchFavorite::all());
+        return Response::json($this->favorite::all());
     }
 
     /**
@@ -32,7 +40,7 @@ class SearchFavoriteController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $searchFavorite = SearchFavorite::query()->create($request->all());
+        $searchFavorite = $this->favorite::query()->create($request->all());
 
         return Response::json($searchFavorite);
     }
@@ -52,7 +60,7 @@ class SearchFavoriteController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request        $request
+     * @param Request $request
      * @param SearchFavorite $searchFavorite
      *
      * @return JsonResponse
@@ -69,9 +77,9 @@ class SearchFavoriteController extends Controller
      *
      * @param SearchFavorite $searchFavorite
      *
+     * @return JsonResponse
      * @throws Exception
      *
-     * @return JsonResponse
      */
     public function destroy(SearchFavorite $searchFavorite): JsonResponse
     {

@@ -165,6 +165,10 @@ Favorites enable you to save searches for a specific user, so after you enable t
 ``.env`` you need to run `php artisan migrate`, and routes for favorites will be exposed 
 automatically. 
 
+It is possible to extend the model used for search favorites and replace with your own. Make sure
+your model extends ``SearchFavorite`` and replace `search_favorite_model` key in the configuration 
+with your model.
+
 ## Debugging
 
 If you'd like to see query called instead of a result, uncomment ``dump`` line
