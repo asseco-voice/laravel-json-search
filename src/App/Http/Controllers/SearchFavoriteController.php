@@ -60,7 +60,7 @@ class SearchFavoriteController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param Request        $request
      * @param SearchFavorite $searchFavorite
      *
      * @return JsonResponse
@@ -77,9 +77,9 @@ class SearchFavoriteController extends Controller
      *
      * @param SearchFavorite $searchFavorite
      *
-     * @return JsonResponse
      * @throws Exception
      *
+     * @return JsonResponse
      */
     public function destroy(SearchFavorite $searchFavorite): JsonResponse
     {
