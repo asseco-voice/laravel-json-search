@@ -15,12 +15,11 @@ class CreateSearchFavoritesTable extends Migration
     {
         Schema::create('search_favorites', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-
             $table->string('user_id')->nullable();
             $table->string('name');
             $table->text('description');
             $table->json('search');
+            $table->timestamps();
         });
     }
 

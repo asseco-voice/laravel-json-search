@@ -8,8 +8,6 @@ use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Response;
 use Voice\JsonSearch\App\SearchFavorite;
 
 class SearchFavoriteController extends Controller
@@ -18,7 +16,8 @@ class SearchFavoriteController extends Controller
 
     public function __construct()
     {
-        $this->favorite = Config::get('asseco-search.search_favorite_model');
+        $model = config('asseco-search.search_favorite_model');
+        $this->favorite = new $model;
     }
 
     /**
@@ -28,7 +27,7 @@ class SearchFavoriteController extends Controller
      */
     public function index(): JsonResponse
     {
-        return Response::json($this->favorite::all());
+        return response()->json($this->favorite::all());
     }
 
     /**
@@ -42,7 +41,7 @@ class SearchFavoriteController extends Controller
     {
         $searchFavorite = $this->favorite::query()->create($request->all());
 
-        return Response::json($searchFavorite);
+        return response()->json($searchFavorite->refresh());
     }
 
     /**
@@ -54,7 +53,7 @@ class SearchFavoriteController extends Controller
      */
     public function show(SearchFavorite $searchFavorite): JsonResponse
     {
-        return Response::json($searchFavorite);
+        return response()->json($searchFavorite);
     }
 
     /**
@@ -67,9 +66,9 @@ class SearchFavoriteController extends Controller
      */
     public function update(Request $request, SearchFavorite $searchFavorite): JsonResponse
     {
-        $isUpdated = $searchFavorite->update($request->all());
+        $searchFavorite->update($request->all());
 
-        return Response::json($isUpdated ? 'true' : 'false');
+        return response()->json($searchFavorite->refresh());
     }
 
     /**
@@ -85,6 +84,6 @@ class SearchFavoriteController extends Controller
     {
         $isDeleted = $searchFavorite->delete();
 
-        return Response::json($isDeleted ? 'true' : 'false');
+        return response()->json($isDeleted ? 'true' : 'false');
     }
 }
