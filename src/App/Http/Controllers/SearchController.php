@@ -17,10 +17,11 @@ class SearchController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @param string $modelName
+     * @param string  $modelName
+     *
+     * @throws Exception
      *
      * @return JsonResponse
-     * @throws Exception
      */
     public function index(Request $request, string $modelName): JsonResponse
     {
@@ -33,11 +34,11 @@ class SearchController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param string $modelName
+     * @param string  $modelName
      *
-     * @return JsonResponse
      * @throws Exception
      *
+     * @return JsonResponse
      */
     public function update(Request $request, string $modelName): JsonResponse
     {
@@ -58,11 +59,11 @@ class SearchController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Request $request
-     * @param string $modelName
+     * @param string  $modelName
      *
-     * @return JsonResponse
      * @throws Exception
      *
+     * @return JsonResponse
      */
     public function destroy(Request $request, string $modelName): JsonResponse
     {
@@ -75,9 +76,9 @@ class SearchController extends Controller
     /**
      * @param string $modelName
      *
-     * @return Model
      * @throws Exception
      *
+     * @return Model
      */
     protected function extractModelClass(string $modelName): Model
     {
