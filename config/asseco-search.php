@@ -3,11 +3,7 @@
 use Voice\JsonSearch\App\SearchFavorite;
 
 return [
-    /**
-     * If favorites are enabled, migrations and routes for this feature
-     * will be enabled as well. Defaults to false.
-     */
-    'search_favorites_enabled' => env('SEARCH_FAVORITES_ENABLED', false) === true,
+    'search_favorite_model' => SearchFavorite::class,
 
     /**
      * Directly map a model name to a class. This takes precedence over model_namespaces.
@@ -24,5 +20,14 @@ return [
         'App',
     ],
 
-    'search_favorite_model' => SearchFavorite::class,
+    /**
+     * If favorites are enabled, migrations and routes for this feature
+     * will be enabled as well. Defaults to false.
+     */
+    'search_favorites_enabled' => env('SEARCH_FAVORITES_ENABLED', false) === true,
+
+    /**
+     * Path to original stub which will create the migration upon publishing.
+     */
+    'stub_path' => '/../migrations/create_search_favorites_table.php.stub',
 ];

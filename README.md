@@ -158,12 +158,15 @@ public function search(Request $request)
 
 ## Search favorites
 
-By default, favorites are disabled. To enable them, set the ``SEARCH_FAVORITES_ENABLED`` 
-in your `.env` file to `true`.
+Favorites enable you to save searches for a specific user.
+ 
+Usage:
 
-Favorites enable you to save searches for a specific user, so after you enable them through
-``.env`` you need to run `php artisan migrate`, and routes for favorites will be exposed 
-automatically. 
+1. By default, favorites are disabled. To enable them, set the ``SEARCH_FAVORITES_ENABLED`` 
+in your `.env` file to `true`.
+1. Publish the migrations with ``php artisan vendor:publish --tag=asseco-search-migrations``.
+1. Run `php artisan migrate`.
+1. Use through standard laravel API resource routes on ``/api/search-favorites`` URL.
 
 It is possible to extend the model used for search favorites and replace with your own. Make sure
 your model extends ``SearchFavorite`` and replace `search_favorite_model` key in the configuration 
@@ -181,4 +184,4 @@ I'd recommend using Laravel query log.
 
 Publish and override the configuration for the package:
 
-    php artisan vendor:publish --provider="Voice\JsonSearch\SearchServiceProvider"
+    php artisan vendor:publish --tag=asseco-search-config

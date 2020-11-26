@@ -31,7 +31,16 @@ class SearchServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->publishes([__DIR__.'/../config/asseco-search.php' => config_path('asseco-search.php')]);
+        $timestamp = now()->format('Y_m_d_His');
+
+        $this->publishes([
+            __DIR__ . config('asseco-search.stub_path') => database_path("migrations/{$timestamp}_create_search_favorites_table.php")
+        ], 'asseco-search-migrations');
+
+
+        $this->publishes([
+            __DIR__.'/../config/asseco-search.php' => config_path('asseco-search.php')
+        ], 'asseco-search-config');
 
         Builder::macro('search', function (array $input) {
             /**
