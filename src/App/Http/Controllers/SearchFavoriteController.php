@@ -17,7 +17,7 @@ class SearchFavoriteController extends Controller
     public function __construct()
     {
         $model = config('asseco-search.search_favorite_model');
-        $this->favorite = new $model;
+        $this->favorite = new $model();
     }
 
     /**

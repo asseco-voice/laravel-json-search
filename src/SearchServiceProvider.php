@@ -34,12 +34,11 @@ class SearchServiceProvider extends ServiceProvider
         $timestamp = now()->format('Y_m_d_His');
 
         $this->publishes([
-            __DIR__ . config('asseco-search.stub_path') => database_path("migrations/{$timestamp}_create_search_favorites_table.php")
+            __DIR__.config('asseco-search.stub_path') => database_path("migrations/{$timestamp}_create_search_favorites_table.php"),
         ], 'asseco-search-migrations');
 
-
         $this->publishes([
-            __DIR__.'/../config/asseco-search.php' => config_path('asseco-search.php')
+            __DIR__.'/../config/asseco-search.php' => config_path('asseco-search.php'),
         ], 'asseco-search-config');
 
         Builder::macro('search', function (array $input) {
