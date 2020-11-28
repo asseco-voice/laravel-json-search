@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Voice\JsonSearch\App\Http\Controllers\SearchController;
-use Voice\JsonSearch\App\Http\Controllers\SearchFavoriteController;
+use Asseco\JsonSearch\App\Http\Controllers\SearchController;
+use Asseco\JsonSearch\App\Http\Controllers\SearchFavoriteController;
 
 /*
 |--------------------------------------------------------------------------

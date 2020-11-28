@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Voice\JsonSearch;
+namespace Asseco\JsonSearch;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
-use Voice\JsonQueryBuilder\JsonQuery;
+use Asseco\JsonQueryBuilder\JsonQuery;
 
 class SearchServiceProvider extends ServiceProvider
 {

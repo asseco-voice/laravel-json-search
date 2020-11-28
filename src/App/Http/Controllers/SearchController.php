@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Voice\JsonSearch\App\Http\Controllers;
+namespace Asseco\JsonSearch\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Exception;

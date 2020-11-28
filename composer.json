@@ -19,13 +19,13 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Voice\\JsonSearch\\": "src/"
+            "Asseco\\JsonSearch\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Voice\\JsonSearch\\SearchServiceProvider"
+                "Asseco\\JsonSearch\\SearchServiceProvider"
             ]
         }
     }
