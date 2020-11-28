@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Asseco\JsonSearch\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Asseco\JsonSearch\App\SearchFavorite;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Asseco\JsonSearch\App\SearchFavorite;
 
 class SearchFavoriteController extends Controller
 {
