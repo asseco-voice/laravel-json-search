@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use Asseco\JsonSearch\App\Http\Controllers\SearchController;
 use Asseco\JsonSearch\App\Http\Controllers\SearchFavoriteController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------

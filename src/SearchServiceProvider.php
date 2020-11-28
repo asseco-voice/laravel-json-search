@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Asseco\JsonSearch;
 
+use Asseco\JsonQueryBuilder\JsonQuery;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
-use Asseco\JsonQueryBuilder\JsonQuery;
 
 class SearchServiceProvider extends ServiceProvider
 {
