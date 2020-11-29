@@ -1,6 +1,6 @@
 <?php
 
-use Voice\JsonSearch\App\SearchFavorite;
+use Asseco\JsonSearch\App\SearchFavorite;
 
 return [
     'search_favorite_model' => SearchFavorite::class,

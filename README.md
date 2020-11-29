@@ -175,7 +175,7 @@ with your model.
 ## Debugging
 
 If you'd like to see query called instead of a result, uncomment ``dump`` line
-within ``Voice\JsonSearch\SearchServiceProvider``. 
+within ``Asseco\JsonSearch\SearchServiceProvider``. 
 
 Due to Laravel query builder inner workings, this will not dump the resulting query for relations. For that purpose
 I'd recommend using Laravel query log. 

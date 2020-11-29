@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Voice\JsonSearch\App;
+namespace Asseco\JsonSearch\App;
 
 use Illuminate\Database\Eloquent\Model;
 
