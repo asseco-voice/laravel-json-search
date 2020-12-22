@@ -17,11 +17,11 @@ class SearchController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @param string  $modelName
-     *
-     * @throws Exception
+     * @param string $modelName
      *
      * @return JsonResponse
+     * @throws Exception
+     *
      */
     public function index(Request $request, string $modelName): JsonResponse
     {
@@ -34,11 +34,11 @@ class SearchController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param string  $modelName
-     *
-     * @throws Exception
+     * @param string $modelName
      *
      * @return JsonResponse
+     * @throws Exception
+     *
      */
     public function update(Request $request, string $modelName): JsonResponse
     {
@@ -59,26 +59,35 @@ class SearchController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Request $request
-     * @param string  $modelName
-     *
-     * @throws Exception
+     * @param string $modelName
      *
      * @return JsonResponse
+     * @throws Exception
+     *
      */
     public function destroy(Request $request, string $modelName): JsonResponse
     {
         $model = $this->extractModelClass($modelName);
-        $isDeleted = $model::search($request->all())->delete();
+        $foundModels = $model::search($request->all());
 
-        return response()->json($isDeleted ? 'true' : 'false');
+        // This can be executed as a single query, but then we are left without
+        // deleted event triggers. If there is a better way, I'm all ears.
+        foreach ($foundModels as $foundModel) {
+            /**
+             * @var $foundModel Model
+             */
+            $foundModel->delete();
+        }
+
+        return response()->json();
     }
 
     /**
      * @param string $modelName
      *
+     * @return Model
      * @throws Exception
      *
-     * @return Model
      */
     protected function extractModelClass(string $modelName): Model
     {
