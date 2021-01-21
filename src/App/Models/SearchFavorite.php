@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Asseco\JsonSearch\App;
+namespace Asseco\JsonSearch\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

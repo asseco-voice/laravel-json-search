@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Asseco\JsonSearch\App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
