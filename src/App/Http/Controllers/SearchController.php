@@ -67,7 +67,7 @@ class SearchController extends Controller
     public function destroy(Request $request, string $modelName): JsonResponse
     {
         $model = $this->extractModelClass($modelName);
-        $foundModels = $model::search($request->all());
+        $foundModels = $model::search($request->all())->get();
 
         // This can be executed as a single query, but then we are left without
         // deleted event triggers. If there is a better way, I'm all ears.
