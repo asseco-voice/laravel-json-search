@@ -17,7 +17,7 @@ return [
      * First model to be found will be returned.
      */
     'models_namespaces'        => [
-        'App',
+        'App\Models',
     ],
 
     /**
