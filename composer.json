@@ -7,7 +7,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.4",
+        "php": "^7.4 || ^8.0",
         "asseco-voice/laravel-json-query-builder": "dev-master",
         "laravel/framework": "^8.0"
     },
