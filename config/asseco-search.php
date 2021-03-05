@@ -6,10 +6,16 @@ return [
     'search_favorite_model' => SearchFavorite::class,
 
     /**
-     * Directly map a model name to a class. This takes precedence over model_namespaces.
+     * Directly map a model name to a class or query builder instance
+     * through a callback. This takes precedence over model_namespaces.
+     *
+     * You CAN'T add query builder instance without a callback as it
+     * will boot with the framework and cause errors in the process.
      */
     'model_mapping' => [
         // 'model' => Model::class,
+        // 'model' => fn() => Model::someScope(),
+        // 'model' => function() { return Model::someScope(); }
     ],
 
     /**

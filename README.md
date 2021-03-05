@@ -28,8 +28,10 @@ to map it automatically (i.e. `/api/search/contacts` in order to search `Contact
 
 By default, ``App`` namespace is used, but you can change the defaults or add additional
 endpoints if you have need for that in the [package configuration](#configuration) by either
-adding a direct model-class mapping in ``model_mapping`` key (taking precedence over other
+adding a direct model mapping in ``model_mapping`` key (taking precedence over other
 options), or adding additional values to ``models_namespaces`` array to make it more generic. 
+
+Description on how to use each of those are in the configuration file.
 
 If out-of-the-box solutions don't suit you, feel free to implement the logic directly
 within your controller. For details check out [custom endpoints section](#custom-endpoints).
