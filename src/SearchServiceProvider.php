@@ -15,11 +15,11 @@ class SearchServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/asseco-search.php', 'asseco-search');
-        $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
+        $this->mergeConfigFrom(__DIR__.'/../config/asseco-search.php', 'asseco-search');
+        $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
 
         if (config('asseco-search.runs_migrations')) {
-            $this->loadMigrationsFrom(__DIR__ . '/../migrations');
+            $this->loadMigrationsFrom(__DIR__.'/../migrations');
         }
     }
 
@@ -29,11 +29,11 @@ class SearchServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishes([
-            __DIR__ . '/../migrations' => database_path('migrations'),
+            __DIR__.'/../migrations' => database_path('migrations'),
         ], 'asseco-search');
 
         $this->publishes([
-            __DIR__ . '/../config/asseco-search.php' => config_path('asseco-search.php'),
+            __DIR__.'/../config/asseco-search.php' => config_path('asseco-search.php'),
         ], 'asseco-search');
 
         Builder::macro('search', function (array $input) {

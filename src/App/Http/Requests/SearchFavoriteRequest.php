@@ -35,7 +35,7 @@ class SearchFavoriteRequest extends FormRequest
                 'string',
                 Rule::unique('search_favorite')->where(function ($query) use ($ownerId) {
                     return $query->where('owner_id', $ownerId);
-                })
+                }),
             ],
             'description' => 'string',
             'search'      => 'required|array',
