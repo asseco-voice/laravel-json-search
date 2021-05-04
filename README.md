@@ -164,11 +164,10 @@ Favorites enable you to save searches for a specific user.
  
 Usage:
 
-1. By default, favorites are disabled. To enable them, set the ``SEARCH_FAVORITES_ENABLED`` 
-in your `.env` file to `true`.
-1. Publish the migrations with ``php artisan vendor:publish --tag=asseco-search-migrations``.
 1. Run `php artisan migrate`.
 1. Use through standard laravel API resource routes on ``/api/search-favorites`` URL.
+1. If you need to modify migrations [publish the package](#configuration) and set `runs_migrations`
+property in the config file to ``false``.
 
 It is possible to extend the model used for search favorites and replace with your own. Make sure
 your model extends ``SearchFavorite`` and replace `search_favorite_model` key in the configuration 
@@ -186,4 +185,4 @@ I'd recommend using Laravel query log.
 
 Publish and override the configuration for the package:
 
-    php artisan vendor:publish --tag=asseco-search-config
+    php artisan vendor:publish --tag=asseco-search
