@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Asseco\JsonSearch\App\Http\Controllers;
 
+use App\Http\Requests\SearchFavoriteRequest;
 use Asseco\JsonSearch\App\Models\SearchFavorite;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -16,6 +17,7 @@ class SearchFavoriteController extends Controller
     public function __construct()
     {
         $model = config('asseco-search.search_favorite_model');
+
         $this->favorite = new $model();
     }
 
@@ -36,9 +38,9 @@ class SearchFavoriteController extends Controller
      *
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(SearchFavoriteRequest $request): JsonResponse
     {
-        $searchFavorite = $this->favorite::query()->create($request->all());
+        $searchFavorite = $this->favorite::query()->create($request->validated());
 
         return response()->json($searchFavorite->refresh());
     }
@@ -63,9 +65,9 @@ class SearchFavoriteController extends Controller
      *
      * @return JsonResponse
      */
-    public function update(Request $request, SearchFavorite $searchFavorite): JsonResponse
+    public function update(SearchFavoriteRequest $request, SearchFavorite $searchFavorite): JsonResponse
     {
-        $searchFavorite->update($request->all());
+        $searchFavorite->update($request->validated());
 
         return response()->json($searchFavorite->refresh());
     }
