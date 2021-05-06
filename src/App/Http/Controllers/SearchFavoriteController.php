@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Asseco\JsonSearch\App\Http\Controllers;
 
-use App\Http\Requests\SearchFavoriteRequest;
 use Asseco\JsonSearch\App\Models\SearchFavorite;
+use Asseco\JsonSearch\Http\Requests\SearchFavoriteRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 
@@ -60,7 +60,7 @@ class SearchFavoriteController extends Controller
      * Update the specified resource in storage.
      *
      * @param SearchFavoriteRequest $request
-     * @param SearchFavorite        $searchFavorite
+     * @param SearchFavorite $searchFavorite
      *
      * @return JsonResponse
      */
@@ -76,9 +76,9 @@ class SearchFavoriteController extends Controller
      *
      * @param SearchFavorite $searchFavorite
      *
+     * @return JsonResponse
      * @throws Exception
      *
-     * @return JsonResponse
      */
     public function destroy(SearchFavorite $searchFavorite): JsonResponse
     {
