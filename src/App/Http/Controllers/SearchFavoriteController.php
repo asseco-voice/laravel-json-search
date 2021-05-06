@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Asseco\JsonSearch\App\Http\Controllers;
 
-use Asseco\JsonSearch\App\Models\SearchFavorite;
 use Asseco\JsonSearch\App\Http\Requests\SearchFavoriteRequest;
+use Asseco\JsonSearch\App\Models\SearchFavorite;
 use Exception;
 use Illuminate\Http\JsonResponse;
 
