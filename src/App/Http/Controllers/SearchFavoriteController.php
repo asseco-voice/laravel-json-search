@@ -8,7 +8,6 @@ use App\Http\Requests\SearchFavoriteRequest;
 use Asseco\JsonSearch\App\Models\SearchFavorite;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class SearchFavoriteController extends Controller
 {
@@ -34,7 +33,7 @@ class SearchFavoriteController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param SearchFavoriteRequest $request
      *
      * @return JsonResponse
      */
@@ -60,7 +59,7 @@ class SearchFavoriteController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request        $request
+     * @param SearchFavoriteRequest $request
      * @param SearchFavorite $searchFavorite
      *
      * @return JsonResponse
@@ -77,9 +76,9 @@ class SearchFavoriteController extends Controller
      *
      * @param SearchFavorite $searchFavorite
      *
+     * @return JsonResponse
      * @throws Exception
      *
-     * @return JsonResponse
      */
     public function destroy(SearchFavorite $searchFavorite): JsonResponse
     {
