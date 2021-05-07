@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Asseco\JsonSearch\App\Http\Controllers;
 
-use App\Http\Requests\SearchFavoriteRequest;
+use Asseco\JsonSearch\App\Http\Requests\SearchFavoriteRequest;
 use Asseco\JsonSearch\App\Models\SearchFavorite;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class SearchFavoriteController extends Controller
 {
@@ -34,7 +33,7 @@ class SearchFavoriteController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param SearchFavoriteRequest $request
      *
      * @return JsonResponse
      */
@@ -60,8 +59,8 @@ class SearchFavoriteController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request        $request
-     * @param SearchFavorite $searchFavorite
+     * @param SearchFavoriteRequest $request
+     * @param SearchFavorite        $searchFavorite
      *
      * @return JsonResponse
      */
