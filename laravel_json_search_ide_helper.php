@@ -1,6 +1,6 @@
 <?php
 
-namespace Illuminate\Database\Eloquent {
+namespace Illuminate\Database\Eloquent;
 
     class Model
     {
@@ -10,4 +10,3 @@ namespace Illuminate\Database\Eloquent {
             return $instance->search();
         }
     }
-}
