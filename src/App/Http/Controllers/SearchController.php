@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Asseco\JsonSearch\App\Http\Controllers;
 
+use Asseco\JsonSearch\App\Http\Requests\SearchRequest;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class SearchController extends Controller
@@ -16,14 +16,14 @@ class SearchController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param Request $request
-     * @param string  $modelName
+     * @param SearchRequest $request
+     * @param string        $modelName
      *
      * @throws Exception
      *
      * @return JsonResponse
      */
-    public function index(Request $request, string $modelName): JsonResponse
+    public function index(SearchRequest $request, string $modelName): JsonResponse
     {
         $model = $this->extractModelClass($modelName);
 
@@ -33,14 +33,14 @@ class SearchController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param string  $modelName
+     * @param SearchRequest $request
+     * @param string        $modelName
      *
      * @throws Exception
      *
      * @return JsonResponse
      */
-    public function update(Request $request, string $modelName): JsonResponse
+    public function update(SearchRequest $request, string $modelName): JsonResponse
     {
         $model = $this->extractModelClass($modelName);
 
@@ -58,14 +58,14 @@ class SearchController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Request $request
-     * @param string  $modelName
+     * @param SearchRequest $request
+     * @param string        $modelName
      *
      * @throws Exception
      *
      * @return JsonResponse
      */
-    public function destroy(Request $request, string $modelName): JsonResponse
+    public function destroy(SearchRequest $request, string $modelName): JsonResponse
     {
         $model = $this->extractModelClass($modelName);
         $foundModels = $model->search($request->all())->get();
