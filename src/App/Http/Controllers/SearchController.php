@@ -9,7 +9,6 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class SearchController extends Controller
@@ -18,7 +17,7 @@ class SearchController extends Controller
      * Display a listing of the resource.
      *
      * @param SearchRequest $request
-     * @param string $modelName
+     * @param string        $modelName
      *
      * @throws Exception
      *
@@ -35,7 +34,7 @@ class SearchController extends Controller
      * Update the specified resource in storage.
      *
      * @param SearchRequest $request
-     * @param string $modelName
+     * @param string        $modelName
      *
      * @throws Exception
      *
@@ -60,7 +59,7 @@ class SearchController extends Controller
      * Remove the specified resource from storage.
      *
      * @param SearchRequest $request
-     * @param string $modelName
+     * @param string        $modelName
      *
      * @throws Exception
      *

@@ -42,11 +42,11 @@ class SearchRequest extends FormRequest
     public function withValidator(Validator $validator)
     {
         $validator->addExtension('string_or_array', function ($attribute, $value, $parameters, $validator) {
-            return (is_string($value) || is_array($value));
+            return is_string($value) || is_array($value);
         });
 
         $validator->addReplacer('string_or_array', function ($message, $attribute, $rule, $parameters, $validator) {
-            return __("The :attribute must be a string or an array.", compact('attribute'));
+            return __('The :attribute must be a string or an array.', compact('attribute'));
         });
     }
 }
