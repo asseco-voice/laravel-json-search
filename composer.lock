@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "asseco-voice/laravel-json-query-builder",
-            "version": "v0.2.0",
+            "version": "v0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/asseco-voice/laravel-json-query-builder.git",
-                "reference": "e5a1a7717f48edaa69243be98f952cd5d3e9c85d"
+                "reference": "5f3367f114b1bfb7ab8d892436cf2a899413a1cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/asseco-voice/laravel-json-query-builder/zipball/e5a1a7717f48edaa69243be98f952cd5d3e9c85d",
-                "reference": "e5a1a7717f48edaa69243be98f952cd5d3e9c85d",
+                "url": "https://api.github.com/repos/asseco-voice/laravel-json-query-builder/zipball/5f3367f114b1bfb7ab8d892436cf2a899413a1cb",
+                "reference": "5f3367f114b1bfb7ab8d892436cf2a899413a1cb",
                 "shasum": ""
             },
             "require": {
@@ -54,9 +54,9 @@
             ],
             "support": {
                 "issues": "https://github.com/asseco-voice/laravel-json-query-builder/issues",
-                "source": "https://github.com/asseco-voice/laravel-json-query-builder/tree/v0.2.0"
+                "source": "https://github.com/asseco-voice/laravel-json-query-builder/tree/v0.3.0"
             },
-            "time": "2021-05-13T12:56:06+00:00"
+            "time": "2021-06-02T13:55:14+00:00"
         },
         {
             "name": "brick/math",
