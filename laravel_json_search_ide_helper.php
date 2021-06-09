@@ -6,7 +6,8 @@ namespace Illuminate\Database\Eloquent;
     {
         public static function search(): \Closure
         {
-            /** @var \Asseco\JsonSearch\SearchServiceProvider $instance */
+            /** @see \Asseco\JsonSearch\SearchServiceProvider */
+            /** @var \Asseco\JsonQueryBuilder\JsonQuery $instance */
             return $instance->search();
         }
     }
