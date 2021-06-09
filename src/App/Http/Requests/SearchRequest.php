@@ -27,7 +27,7 @@ class SearchRequest extends FormRequest
     public function rules()
     {
         return [
-            'search'       => 'array|required',
+            'search'       => 'array',
             'returns'      => 'string_or_array|nullable',
             'order_by'     => 'array|nullable',
             'group_by'     => 'string_or_array|nullable',
