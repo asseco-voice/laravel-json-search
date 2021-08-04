@@ -78,7 +78,7 @@ You can return it by using:
         "first_name": "=foo;bar;!baz",
         "last_name": "=test"
     },
-    "append": ['some']
+    "append": ["some"]
 }
 ```
 
