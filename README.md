@@ -48,7 +48,7 @@ just filtering by attributes.
 
 Call the endpoint providing the following JSON:
 
-```
+```json
 {
     "search": {
         "first_name": "=foo;bar;!baz",
@@ -60,11 +60,33 @@ Call the endpoint providing the following JSON:
 This will perform a ``SELECT * FROM some_table WHERE first_name IN ('foo, 'bar') 
 AND first_name not in ('baz') or last_name in ('test')``.
 
+Additionally, you are able to provide ``append`` array to resolve your custom defined 
+properties on a Laravel model which aren't listed in `$appends` array. I.e.
+
+```php
+public function getSomeAttribute()
+{
+    return 'foo';
+}
+```
+
+You can return it by using:
+
+```json
+{
+    "search": {
+        "first_name": "=foo;bar;!baz",
+        "last_name": "=test"
+    },
+    "append": ["some"]
+}
+```
+
 ### PUT
 
 Call the endpoint providing the following JSON:
 
-```
+```json
 {
     "search": {
         "first_name": "=foo;bar;!baz",
@@ -82,7 +104,7 @@ set it will perform a mass update giving a ``new name`` to every record retrieve
 
 ### DELETE
 
-```
+```json
 {
     "search": {
         "first_name": "=foo;bar;!baz",
@@ -103,13 +125,13 @@ It is possible to create a custom endpoint if the current setup does not suit yo
 
 - Add route:
 
-```
+```php
 Route::post('search', 'ExampleController@search');
 ```
 
 - Call the method within the controller and provide it with input parameters from JSON body.
 
-```
+```php
 public function search(Request $request)
 {
     return SomeModel::search($request->all())->get();
@@ -120,13 +142,13 @@ public function search(Request $request)
 
 - Add route:
 
-```
+```php
 Route::put('search/update', 'ExampleController@search');
 ```
 
 - Call the method within the controller and provide it with input parameters from JSON body.
 
-```
+```php
 public function search(Request $request)
 {
     $search = SomeModel::search($request->except('update'));
@@ -145,13 +167,13 @@ public function search(Request $request)
 
 - Add route:
 
-```
+```php
 Route::delete('search', 'ExampleController@search');
 ```
 
 - Call the method within the controller and provide it with input parameters from JSON body.
 
-```
+```php
 public function search(Request $request)
 {
     return SomeModel::search($request->all())->delete();
