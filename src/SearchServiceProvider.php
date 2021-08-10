@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Asseco\JsonSearch;
 
 use Asseco\JsonQueryBuilder\JsonQuery;
+use Asseco\JsonSearch\App\Contracts\SearchFavorite;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\ServiceProvider;
 
@@ -18,7 +19,7 @@ class SearchServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/asseco-search.php', 'asseco-search');
         $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
 
-        if (config('asseco-search.runs_migrations')) {
+        if (config('asseco-search.migrations.run')) {
             $this->loadMigrationsFrom(__DIR__.'/../migrations');
         }
     }
@@ -35,6 +36,8 @@ class SearchServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/asseco-search.php' => config_path('asseco-search.php'),
         ], 'asseco-search');
+
+        $this->app->bind(SearchFavorite::class, config('asseco-search.models.search_favorite'));
 
         Builder::macro('search', function (array $input) {
             /**

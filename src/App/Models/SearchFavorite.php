@@ -8,7 +8,7 @@ use Asseco\JsonSearch\Database\Factories\SearchFavoriteFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SearchFavorite extends Model
+class SearchFavorite extends Model implements \Asseco\JsonSearch\App\Contracts\SearchFavorite
 {
     use HasFactory;
 
