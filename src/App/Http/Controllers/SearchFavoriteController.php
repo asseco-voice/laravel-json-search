@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Asseco\JsonSearch\App\Http\Controllers;
 
+use Asseco\JsonSearch\App\Contracts\SearchFavorite as SearchFavoriteContract;
 use Asseco\JsonSearch\App\Http\Requests\SearchFavoriteRequest;
 use Asseco\JsonSearch\App\Models\SearchFavorite;
 use Exception;
@@ -11,13 +12,11 @@ use Illuminate\Http\JsonResponse;
 
 class SearchFavoriteController extends Controller
 {
-    public SearchFavorite $favorite;
+    public SearchFavoriteContract $favorite;
 
-    public function __construct()
+    public function __construct(SearchFavoriteContract $searchFavorite)
     {
-        $model = config('asseco-search.search_favorite_model');
-
-        $this->favorite = new $model();
+        $this->favorite = $searchFavorite;
     }
 
     /**

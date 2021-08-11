@@ -10,7 +10,7 @@ class SearchFavoriteFactory extends Factory
 {
     public function modelName()
     {
-        return config('asseco-search.search_favorite_model') ?: parent::modelName();
+        return config('asseco-search.models.search_favorite');
     }
 
     /**

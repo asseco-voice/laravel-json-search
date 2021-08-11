@@ -1,5 +1,6 @@
 <?php
 
+use Asseco\BlueprintAudit\App\MigrationMethodPicker;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +15,12 @@ class CreateSearchFavoritesTable extends Migration
     public function up()
     {
         Schema::create('search_favorites', function (Blueprint $table) {
-            $table->id();
+            if (config('asseco-search.migrations.uuid')) {
+                $table->uuid('id')->primary();
+            } else {
+                $table->id();
+            }
+
             $table->string('owner_id')->nullable();
             $table->string('name');
             $table->text('description')->nullable();
@@ -22,7 +28,7 @@ class CreateSearchFavoritesTable extends Migration
 
             $table->index(['name', 'owner_id']);
 
-            $table->timestamps();
+            MigrationMethodPicker::pick($table, config('asseco-search.migrations.timestamps'));
         });
     }
 
