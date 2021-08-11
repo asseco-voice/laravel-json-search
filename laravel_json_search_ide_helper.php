@@ -1,6 +1,7 @@
 <?php
 
-namespace Illuminate\Database\Eloquent {
+namespace Illuminate\Database\Eloquent;
+
     class Model
     {
         public static function search(array $input): Builder
@@ -9,4 +10,3 @@ namespace Illuminate\Database\Eloquent {
             return $instance->boot();
         }
     }
-}
