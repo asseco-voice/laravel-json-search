@@ -203,8 +203,8 @@ within ``Asseco\JsonSearch\SearchServiceProvider``.
 Due to Laravel query builder inner workings, this will not dump the resulting query for relations. For that purpose
 I'd recommend using Laravel query log. 
 
-## Configuration
+# Extending the package
 
-Publish and override the configuration for the package:
-
-    php artisan vendor:publish --tag=asseco-search
+Publishing the configuration will enable you to change package models as
+well as controlling how migrations behave. If extending the model, make sure
+you're extending the original model in your implementation.
