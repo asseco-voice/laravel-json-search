@@ -17,21 +17,23 @@ class SearchController extends Controller
      * Display a listing of the resource.
      *
      * @param SearchRequest $request
-     * @param string        $modelName
-     *
-     * @throws Exception
+     * @param string $modelName
      *
      * @return JsonResponse
+     * @throws Exception
+     *
      */
     public function index(SearchRequest $request, string $modelName): JsonResponse
     {
         $model = $this->extractModelClass($modelName);
 
+        $query = $model->search($request->except('append'));
+
         foreach ($request->get('scopes', []) as $scope) {
-            $model->{$scope}();
+            $query->{$scope}();
         }
 
-        $resolved = $model->search($request->except('append'))->get();
+        $resolved = $query->get();
 
         return response()->json(
             $resolved->append($request->get('append', []))
@@ -42,11 +44,11 @@ class SearchController extends Controller
      * Update the specified resource in storage.
      *
      * @param SearchRequest $request
-     * @param string        $modelName
-     *
-     * @throws Exception
+     * @param string $modelName
      *
      * @return JsonResponse
+     * @throws Exception
+     *
      */
     public function update(SearchRequest $request, string $modelName): JsonResponse
     {
@@ -67,11 +69,11 @@ class SearchController extends Controller
      * Remove the specified resource from storage.
      *
      * @param SearchRequest $request
-     * @param string        $modelName
-     *
-     * @throws Exception
+     * @param string $modelName
      *
      * @return JsonResponse
+     * @throws Exception
+     *
      */
     public function destroy(SearchRequest $request, string $modelName): JsonResponse
     {
@@ -93,9 +95,9 @@ class SearchController extends Controller
     /**
      * @param string $modelName
      *
+     * @return Model|Builder
      * @throws Exception
      *
-     * @return Model|Builder
      */
     protected function extractModelClass(string $modelName)
     {
