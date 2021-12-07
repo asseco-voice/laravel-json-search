@@ -37,6 +37,7 @@ class SearchRequest extends FormRequest
             'count'        => 'boolean|nullable',
             'soft_deleted' => 'boolean|nullable',
             'append'       => 'array|nullable',
+            'scopes'       => 'array|nullable',
         ];
     }
 

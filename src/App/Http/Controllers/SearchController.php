@@ -27,6 +27,10 @@ class SearchController extends Controller
     {
         $model = $this->extractModelClass($modelName);
 
+        foreach ($request->get('scopes', []) as $scope) {
+            $model->{$scope}();
+        }
+
         $resolved = $model->search($request->except('append'))->get();
 
         return response()->json(
