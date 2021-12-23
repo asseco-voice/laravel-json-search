@@ -27,7 +27,7 @@ class SearchController extends Controller
     {
         $model = $this->extractModelClass($modelName);
 
-        $query = $model->search($request->except('append'));
+        $query = $model->search($request->except(['append', 'scopes']));
 
         foreach ($request->get('scopes', []) as $scope) {
             $query->{$scope}();
