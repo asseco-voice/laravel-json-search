@@ -27,8 +27,8 @@ class SearchController extends Controller
             Search::get(
                 $modelName,
                 $request->except(['append', 'scopes']),
-                $request->get('append'),
-                $request->get('scopes'),
+                $request->get('append', []),
+                $request->get('scopes', []),
             )
         );
     }
