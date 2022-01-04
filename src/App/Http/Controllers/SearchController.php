@@ -23,7 +23,13 @@ class SearchController extends Controller
      */
     public function index(SearchRequest $request, string $modelName): JsonResponse
     {
-        return response()->json(Search::get($request, $modelName));
+        return response()->json(
+            Search::get(
+                $modelName,
+                $request->except(['append', 'scopes']),
+                $request->get('append'),
+                $request->get('scopes'),
+            ));
     }
 
     /**

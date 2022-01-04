@@ -13,24 +13,26 @@ use Illuminate\Support\Str;
 class Search
 {
     /**
-     * @param SearchRequest $request
      * @param string $modelName
+     * @param array $search
+     * @param array $append
+     * @param array $scopes
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      * @throws Exception
      */
-    public static function get(SearchRequest $request, string $modelName)
+    public static function get(string $modelName, array $search, array $append = [], array $scopes = [])
     {
         $model = self::extractModelClass($modelName);
 
-        $query = $model->search($request->except(['append', 'scopes']));
+        $query = $model->search($search);
 
-        foreach ($request->get('scopes', []) as $scope) {
+        foreach ($scopes as $scope) {
             $query->{$scope}();
         }
 
         $resolved = $query->get();
 
-        return $resolved->append($request->get('append', []));
+        return $resolved->append($append);
     }
 
     /**
