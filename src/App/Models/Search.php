@@ -19,6 +19,8 @@ class Search
      * @param array $scopes
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      * @throws Exception
+     *
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     public static function get(string $modelName, array $search, array $append = [], array $scopes = [])
     {
@@ -37,9 +39,11 @@ class Search
 
     /**
      * @param SearchRequest $request
-     * @param string $modelName
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @param string        $modelName
+     *
      * @throws Exception
+     *
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     public static function update(SearchRequest $request, string $modelName)
     {
@@ -58,7 +62,8 @@ class Search
 
     /**
      * @param SearchRequest $request
-     * @param string $modelName
+     * @param string        $modelName
+     *
      * @throws Exception
      */
     public static function delete(SearchRequest $request, string $modelName)
@@ -79,9 +84,9 @@ class Search
     /**
      * @param string $modelName
      *
-     * @return Model|Builder
      * @throws Exception
      *
+     * @return Model|Builder
      */
     protected static function extractModelClass(string $modelName)
     {
