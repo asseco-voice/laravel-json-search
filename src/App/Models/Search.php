@@ -22,7 +22,7 @@ class Search
      *
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    public static function get(string $modelName, array $search, array $append = [], array $scopes = [])
+    public static function get(string $modelName, array $search, ?array $append = [], ?array $scopes = [])
     {
         $model = self::extractModelClass($modelName);
 
