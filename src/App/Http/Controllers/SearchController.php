@@ -29,7 +29,8 @@ class SearchController extends Controller
                 $request->except(['append', 'scopes']),
                 $request->get('append'),
                 $request->get('scopes'),
-            ));
+            )
+        );
     }
 
     /**

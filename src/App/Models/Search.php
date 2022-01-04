@@ -14,12 +14,13 @@ class Search
 {
     /**
      * @param string $modelName
-     * @param array $search
-     * @param array $append
-     * @param array $scopes
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @param array  $search
+     * @param array  $append
+     * @param array  $scopes
+     *
      * @throws Exception
      *
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     public static function get(string $modelName, array $search, ?array $append = [], ?array $scopes = [])
