@@ -7,44 +7,81 @@ namespace Asseco\JsonSearch\App\Models;
 use Asseco\JsonSearch\App\Http\Requests\SearchRequest;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Str;
 
 class Search
 {
     /**
      * @param string $modelName
-     * @param array  $search
-     * @param array  $append
-     * @param array  $scopes
+     * @param array $search
+     * @param array $appends
+     * @param array $scopes
      *
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      * @throws Exception
      *
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    public static function get(string $modelName, array $search, ?array $append = [], ?array $scopes = [])
+    public static function get(string $modelName, array $search, ?array $appends = [], ?array $scopes = [])
     {
         $model = self::extractModelClass($modelName);
-
         $query = $model->search($search);
 
+        self::attachScopes($scopes, $query);
+        $resolved = $query->get();
+        self::attachAppends($appends, $resolved);
+
+        return $resolved;
+    }
+
+    protected static function attachScopes(?array $scopes, $query): void
+    {
         foreach ($scopes as $scope) {
             $query->{$scope}();
         }
+    }
 
-        $resolved = $query->get();
+    protected static function attachAppends(?array $appends, $collection): void
+    {
+        $modelAppends = [];
 
-        return $resolved->append($append);
+        foreach ($appends as $append) {
+
+            $relationAppends = explode('.', $append);
+
+            // Less than 2 means no '.' separator was used, so we're talking about
+            // plain append to original model, not to a relation.
+            if (count($relationAppends) < 2) {
+                $modelAppends[] = $append;
+                continue;
+            }
+
+            $append = array_pop($relationAppends);
+
+            foreach ($collection as $model) {
+                self::appendRelation($model, $relationAppends, $append);
+            }
+        }
+
+        $collection->append($modelAppends);
+    }
+
+    protected static function appendRelation($model, array $relationModels, string $append): void
+    {
+        $relation = Str::camel(array_shift($relationModels));
+
+        $resolved = $relation ? $model->{$relation} : $model;
+
+        $resolved->append($append);
     }
 
     /**
      * @param SearchRequest $request
-     * @param string        $modelName
-     *
-     * @throws Exception
+     * @param string $modelName
      *
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @throws Exception
+     *
      */
     public static function update(SearchRequest $request, string $modelName)
     {
@@ -63,7 +100,7 @@ class Search
 
     /**
      * @param SearchRequest $request
-     * @param string        $modelName
+     * @param string $modelName
      *
      * @throws Exception
      */
@@ -84,10 +121,8 @@ class Search
 
     /**
      * @param string $modelName
-     *
+     * @return mixed
      * @throws Exception
-     *
-     * @return Model|Builder
      */
     protected static function extractModelClass(string $modelName)
     {
