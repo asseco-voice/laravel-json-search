@@ -7,7 +7,6 @@ namespace Asseco\JsonSearch\App\Models;
 use Asseco\JsonSearch\App\Http\Requests\SearchRequest;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Str;
 
 class Search
@@ -15,7 +14,7 @@ class Search
     /**
      * @param string $modelName
      * @param array  $search
-     * @param array  $append
+     * @param array  $appends
      * @param array  $scopes
      *
      * @throws Exception
@@ -23,19 +22,56 @@ class Search
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    public static function get(string $modelName, array $search, ?array $append = [], ?array $scopes = [])
+    public static function get(string $modelName, array $search, ?array $appends = [], ?array $scopes = [])
     {
         $model = self::extractModelClass($modelName);
-
         $query = $model->search($search);
 
+        self::attachScopes($scopes, $query);
+        $resolved = $query->get();
+        self::attachAppends($appends, $resolved);
+
+        return $resolved;
+    }
+
+    protected static function attachScopes(?array $scopes, $query): void
+    {
         foreach ($scopes as $scope) {
             $query->{$scope}();
         }
+    }
 
-        $resolved = $query->get();
+    protected static function attachAppends(?array $appends, $collection): void
+    {
+        $modelAppends = [];
 
-        return $resolved->append($append);
+        foreach ($appends as $append) {
+            $relationAppends = explode('.', $append);
+
+            // Less than 2 means no '.' separator was used, so we're talking about
+            // plain append to original model, not to a relation.
+            if (count($relationAppends) < 2) {
+                $modelAppends[] = $append;
+                continue;
+            }
+
+            $append = array_pop($relationAppends);
+
+            foreach ($collection as $model) {
+                self::appendRelation($model, $relationAppends, $append);
+            }
+        }
+
+        $collection->append($modelAppends);
+    }
+
+    protected static function appendRelation($model, array $relationModels, string $append): void
+    {
+        $relation = Str::camel(array_shift($relationModels));
+
+        $resolved = $relation ? $model->{$relation} : $model;
+
+        $resolved->append($append);
     }
 
     /**
@@ -87,7 +123,7 @@ class Search
      *
      * @throws Exception
      *
-     * @return Model|Builder
+     * @return mixed
      */
     protected static function extractModelClass(string $modelName)
     {

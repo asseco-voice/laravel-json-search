@@ -82,6 +82,17 @@ You can return it by using:
 }
 ```
 
+It is possible to do 1-level nested appends like:
+
+```
+"append": ["relation1.append_attribute_for_r1"]
+```
+
+More than 1-level is not supported.
+
+Do note that this is completely unoptimized and will potentially cause really slow executions.
+Use with caution.
+
 ### PUT
 
 Call the endpoint providing the following JSON:
