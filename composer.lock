@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "545683be9979b7be90116944fb44e1fb",
+    "content-hash": "29b1a2c82ff087f3a2e23d6aa02ea8bd",
     "packages": [
         {
             "name": "asseco-voice/laravel-blueprint-audit",
-            "version": "v0.2.0",
+            "version": "v0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/asseco-voice/laravel-blueprint-audit.git",
-                "reference": "561a52e6ed1fa9f65b092eddf8b0282c123c632d"
+                "reference": "944e69ab0b8c371629a044f81666c50012dadfe0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/asseco-voice/laravel-blueprint-audit/zipball/561a52e6ed1fa9f65b092eddf8b0282c123c632d",
-                "reference": "561a52e6ed1fa9f65b092eddf8b0282c123c632d",
+                "url": "https://api.github.com/repos/asseco-voice/laravel-blueprint-audit/zipball/944e69ab0b8c371629a044f81666c50012dadfe0",
+                "reference": "944e69ab0b8c371629a044f81666c50012dadfe0",
                 "shasum": ""
             },
             "require": {
@@ -56,22 +56,22 @@
             ],
             "support": {
                 "issues": "https://github.com/asseco-voice/laravel-blueprint-audit/issues",
-                "source": "https://github.com/asseco-voice/laravel-blueprint-audit/tree/v0.2.0"
+                "source": "https://github.com/asseco-voice/laravel-blueprint-audit/tree/v0.2.1"
             },
-            "time": "2021-08-09T12:05:34+00:00"
+            "time": "2021-08-20T07:14:19+00:00"
         },
         {
             "name": "asseco-voice/laravel-common",
-            "version": "v0.3.0",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/asseco-voice/laravel-common.git",
-                "reference": "9f2970e3831fce23d42406b631f7c2f105a65915"
+                "reference": "1430a3341bbad3ae4296805508da226d97e75d04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/asseco-voice/laravel-common/zipball/9f2970e3831fce23d42406b631f7c2f105a65915",
-                "reference": "9f2970e3831fce23d42406b631f7c2f105a65915",
+                "url": "https://api.github.com/repos/asseco-voice/laravel-common/zipball/1430a3341bbad3ae4296805508da226d97e75d04",
+                "reference": "1430a3341bbad3ae4296805508da226d97e75d04",
                 "shasum": ""
             },
             "require": {
@@ -111,9 +111,9 @@
             ],
             "support": {
                 "issues": "https://github.com/asseco-voice/laravel-common/issues",
-                "source": "https://github.com/asseco-voice/laravel-common/tree/v0.3.0"
+                "source": "https://github.com/asseco-voice/laravel-common/tree/v1.0.0"
             },
-            "time": "2021-08-09T12:10:29+00:00"
+            "time": "2022-04-20T10:57:54+00:00"
         },
         {
             "name": "asseco-voice/laravel-json-query-builder",
