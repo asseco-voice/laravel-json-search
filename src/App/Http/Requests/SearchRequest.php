@@ -27,17 +27,18 @@ class SearchRequest extends FormRequest
     public function rules()
     {
         return [
-            'search'       => 'array',
-            'returns'      => 'string_or_array|nullable',
-            'order_by'     => 'array|nullable',
-            'group_by'     => 'string_or_array|nullable',
-            'relations'    => 'string_or_array|nullable',
-            'limit'        => 'integer|nullable|required_with:offset',
-            'offset'       => 'integer|nullable',
-            'count'        => 'boolean|nullable',
-            'soft_deleted' => 'boolean|nullable',
-            'append'       => 'array|nullable',
-            'scopes'       => 'array|nullable',
+            'search'            => 'array',
+            'returns'           => 'string_or_array|nullable',
+            'order_by'          => 'array|nullable',
+            'group_by'          => 'string_or_array|nullable',
+            'relations'         => 'string_or_array|nullable',
+            'without_relations' => 'string_or_array|nullable',
+            'limit'             => 'integer|nullable|required_with:offset',
+            'offset'            => 'integer|nullable',
+            'count'             => 'boolean|nullable',
+            'soft_deleted'      => 'boolean|nullable',
+            'append'            => 'array|nullable',
+            'scopes'            => 'array|nullable',
         ];
     }
 
