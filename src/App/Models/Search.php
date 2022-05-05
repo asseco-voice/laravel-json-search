@@ -12,15 +12,14 @@ use Illuminate\Support\Str;
 class Search
 {
     /**
-     * @param string $modelName
-     * @param array  $search
-     * @param array  $appends
-     * @param array  $scopes
+     * @param  string  $modelName
+     * @param  array  $search
+     * @param  array  $appends
+     * @param  array  $scopes
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      *
      * @throws Exception
-     *
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     public static function get(string $modelName, array $search, ?array $appends = [], ?array $scopes = [])
     {
@@ -75,12 +74,11 @@ class Search
     }
 
     /**
-     * @param SearchRequest $request
-     * @param string        $modelName
+     * @param  SearchRequest  $request
+     * @param  string  $modelName
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      *
      * @throws Exception
-     *
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     public static function update(SearchRequest $request, string $modelName)
     {
@@ -98,8 +96,8 @@ class Search
     }
 
     /**
-     * @param SearchRequest $request
-     * @param string        $modelName
+     * @param  SearchRequest  $request
+     * @param  string  $modelName
      *
      * @throws Exception
      */
@@ -119,11 +117,10 @@ class Search
     }
 
     /**
-     * @param string $modelName
+     * @param  string  $modelName
+     * @return mixed
      *
      * @throws Exception
-     *
-     * @return mixed
      */
     protected static function extractModelClass(string $modelName)
     {
