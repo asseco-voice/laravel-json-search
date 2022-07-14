@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('api')
-    ->middleware('api')
+Route::prefix(config('asseco-search.routes.prefix'))
+    ->middleware(config('asseco-search.routes.middleware'))
     ->group(function () {
         Route::post('search/{model}', [SearchController::class, 'index'])->name('search.index');
         Route::put('search/{model}/update', [SearchController::class, 'update'])->name('search.update');
