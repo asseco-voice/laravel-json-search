@@ -30,6 +30,7 @@ class SearchFavoriteRequest extends FormRequest
 
         return [
             'owner_id'    => 'nullable|string',
+            'model'       => 'required|string',
             'name'        => [
                 'required',
                 'string',

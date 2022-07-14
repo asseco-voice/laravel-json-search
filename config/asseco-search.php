@@ -53,4 +53,9 @@ return [
     'models_namespaces' => [
         'App\Models',
     ],
+
+    'routes' => [
+        'prefix'     => 'api',
+        'middleware' => ['api'],
+    ],
 ];

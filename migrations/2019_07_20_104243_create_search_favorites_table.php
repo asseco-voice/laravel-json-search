@@ -21,6 +21,7 @@ class CreateSearchFavoritesTable extends Migration
                 $table->id();
             }
 
+            $table->string('model');
             $table->string('owner_id')->nullable();
             $table->string('name');
             $table->text('description')->nullable();
