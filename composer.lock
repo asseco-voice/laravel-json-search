@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "asseco-voice/laravel-blueprint-audit",
-            "version": "v1.0.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/asseco-voice/laravel-blueprint-audit.git",
-                "reference": "d3be8acb501452c0f5dc04dcd93a949b971ea287"
+                "reference": "d3562464ceb396c47f4c64db0c19661750afed72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/asseco-voice/laravel-blueprint-audit/zipball/d3be8acb501452c0f5dc04dcd93a949b971ea287",
-                "reference": "d3be8acb501452c0f5dc04dcd93a949b971ea287",
+                "url": "https://api.github.com/repos/asseco-voice/laravel-blueprint-audit/zipball/d3562464ceb396c47f4c64db0c19661750afed72",
+                "reference": "d3562464ceb396c47f4c64db0c19661750afed72",
                 "shasum": ""
             },
             "require": {
@@ -56,22 +56,22 @@
             ],
             "support": {
                 "issues": "https://github.com/asseco-voice/laravel-blueprint-audit/issues",
-                "source": "https://github.com/asseco-voice/laravel-blueprint-audit/tree/v1.0.0"
+                "source": "https://github.com/asseco-voice/laravel-blueprint-audit/tree/v1.1.0"
             },
-            "time": "2022-04-26T08:08:42+00:00"
+            "time": "2022-08-30T12:48:14+00:00"
         },
         {
             "name": "asseco-voice/laravel-common",
-            "version": "v2.0.0",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/asseco-voice/laravel-common.git",
-                "reference": "61a9214293b8e4c2d1233d9afc8cfb97b86c72dd"
+                "reference": "b74d2576eeeeebd2ba30abf4922923a8d3af3bdc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/asseco-voice/laravel-common/zipball/61a9214293b8e4c2d1233d9afc8cfb97b86c72dd",
-                "reference": "61a9214293b8e4c2d1233d9afc8cfb97b86c72dd",
+                "url": "https://api.github.com/repos/asseco-voice/laravel-common/zipball/b74d2576eeeeebd2ba30abf4922923a8d3af3bdc",
+                "reference": "b74d2576eeeeebd2ba30abf4922923a8d3af3bdc",
                 "shasum": ""
             },
             "require": {
@@ -111,22 +111,22 @@
             ],
             "support": {
                 "issues": "https://github.com/asseco-voice/laravel-common/issues",
-                "source": "https://github.com/asseco-voice/laravel-common/tree/v2.0.0"
+                "source": "https://github.com/asseco-voice/laravel-common/tree/v2.1.0"
             },
-            "time": "2022-04-26T08:14:38+00:00"
+            "time": "2022-08-30T13:05:23+00:00"
         },
         {
             "name": "asseco-voice/laravel-json-query-builder",
-            "version": "v1.0.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/asseco-voice/laravel-json-query-builder.git",
-                "reference": "eadc5ece44b7379aff41dd06672e2b4d9edf89cb"
+                "reference": "d3ce1c6035bdd840c02a23d3beb32875aaaaaf4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/asseco-voice/laravel-json-query-builder/zipball/eadc5ece44b7379aff41dd06672e2b4d9edf89cb",
-                "reference": "eadc5ece44b7379aff41dd06672e2b4d9edf89cb",
+                "url": "https://api.github.com/repos/asseco-voice/laravel-json-query-builder/zipball/d3ce1c6035bdd840c02a23d3beb32875aaaaaf4b",
+                "reference": "d3ce1c6035bdd840c02a23d3beb32875aaaaaf4b",
                 "shasum": ""
             },
             "require": {
@@ -163,9 +163,9 @@
             ],
             "support": {
                 "issues": "https://github.com/asseco-voice/laravel-json-query-builder/issues",
-                "source": "https://github.com/asseco-voice/laravel-json-query-builder/tree/v1.0.0"
+                "source": "https://github.com/asseco-voice/laravel-json-query-builder/tree/v1.1.1"
             },
-            "time": "2022-04-27T06:35:13+00:00"
+            "time": "2022-09-02T13:16:35+00:00"
         },
         {
             "name": "brick/math",
