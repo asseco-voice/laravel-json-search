@@ -25,6 +25,7 @@ class SearchFavoriteFactory extends Factory
             'owner_id'    => $this->faker->uuid,
             'description' => $this->faker->sentence,
             'search'      => json_encode(['test' => 'test']),
+            'deletable'   => $this->faker->boolean(90),
             'created_at'  => $this->faker->dateTime(),
             'updated_at'  => $this->faker->dateTime(),
         ];

@@ -26,6 +26,7 @@ class CreateSearchFavoritesTable extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->json('search');
+            $table->boolean('deletable')->default(1);
 
             $table->index(['name', 'owner_id']);
 
