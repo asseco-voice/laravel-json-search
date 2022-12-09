@@ -61,7 +61,7 @@ return [
 
     /**
      * Sets the default upper limit for search queries. If the limit parameter is not passed, or the passed
-     * limit is higher, it will automatically be set to this value. Leave the value as null if you don't want to use this feature
+     * limit is higher, it will automatically be set to this value. Leave the value as null if you don't want to use this feature.
      */
-    'default_limit' => null
+    'default_limit' => null,
 ];
