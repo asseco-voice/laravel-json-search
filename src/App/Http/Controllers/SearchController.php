@@ -45,9 +45,7 @@ class SearchController extends Controller
      */
     public function update(SearchRequest $request, string $modelName): JsonResponse
     {
-        $request = $this->setLimit($request);
-
-        return response()->json(Search::update($request, $modelName));
+        return response()->json(Search::update($this->setLimit($request), $modelName));
     }
 
     /**
@@ -61,9 +59,7 @@ class SearchController extends Controller
      */
     public function destroy(SearchRequest $request, string $modelName): JsonResponse
     {
-        $request = $this->setLimit($request);
-
-        Search::delete($request, $modelName);
+        Search::delete($this->setLimit($request), $modelName);
 
         return response()->json();
     }
