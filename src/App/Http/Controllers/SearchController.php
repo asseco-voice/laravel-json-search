@@ -67,9 +67,10 @@ class SearchController extends Controller
     protected function setLimit(SearchRequest $request): SearchRequest
     {
         $limit = $request->get('limit');
+        $maxLimit = config('asseco-search.default_limit');
 
-        if (config('asseco-search.default_limit') && (!$limit || $limit > 100)) {
-            $request->merge(['limit' => 100]);
+        if ($maxLimit && (!$limit || $limit > $maxLimit)) {
+            $request->merge(['limit' => $maxLimit]);
         }
 
         return $request;
