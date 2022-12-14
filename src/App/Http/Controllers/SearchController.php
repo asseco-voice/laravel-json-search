@@ -22,6 +22,8 @@ class SearchController extends Controller
      */
     public function index(SearchRequest $request, string $modelName): JsonResponse
     {
+        $request = $this->setLimit($request);
+
         return response()->json(
             Search::get(
                 $modelName,
@@ -43,7 +45,7 @@ class SearchController extends Controller
      */
     public function update(SearchRequest $request, string $modelName): JsonResponse
     {
-        return response()->json(Search::update($request, $modelName));
+        return response()->json(Search::update($this->setLimit($request), $modelName));
     }
 
     /**
@@ -57,8 +59,20 @@ class SearchController extends Controller
      */
     public function destroy(SearchRequest $request, string $modelName): JsonResponse
     {
-        Search::delete($request, $modelName);
+        Search::delete($this->setLimit($request), $modelName);
 
         return response()->json();
+    }
+
+    protected function setLimit(SearchRequest $request): SearchRequest
+    {
+        $limit = $request->get('limit');
+        $maxLimit = config('asseco-search.default_limit');
+
+        if ($maxLimit && (!$limit || $limit > $maxLimit)) {
+            $request->merge(['limit' => $maxLimit]);
+        }
+
+        return $request;
     }
 }
