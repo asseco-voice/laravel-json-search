@@ -27,6 +27,7 @@ class SearchFavoriteRequest extends FormRequest
     public function rules()
     {
         $ownerId = $this->owner_id;
+        $searchFavorite = $this->route('search_favorite');
 
         return [
             'owner_id'    => 'nullable|string',
@@ -34,8 +35,8 @@ class SearchFavoriteRequest extends FormRequest
             'name'        => [
                 'required',
                 'string',
-                Rule::unique('search_favorites')->where(function ($query) use ($ownerId) {
-                    return $query->where('owner_id', $ownerId);
+                Rule::unique('search_favorites')->where(function ($query) use ($ownerId, $searchFavorite) {
+                    return $query->where('owner_id', $ownerId)->whereNot('id', optional($searchFavorite)->id);
                 }),
             ],
             'description' => 'string',
