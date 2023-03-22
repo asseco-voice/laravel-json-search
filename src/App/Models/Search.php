@@ -6,25 +6,25 @@ namespace Asseco\JsonSearch\App\Models;
 
 use Asseco\JsonSearch\App\Http\Requests\SearchRequest;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Search
 {
     /**
-     * @param  string  $modelName
-     * @param  array  $search
-     * @param  array  $appends
-     * @param  array  $scopes
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
-     *
+     * @param string $modelName
+     * @param array $search
+     * @param array|null $appends
+     * @param array|null $scopes
+     * @return Builder|Collection
      * @throws Exception
      */
     public static function get(string $modelName, array $search, ?array $appends = [], ?array $scopes = [])
     {
         $model = self::extractModelClass($modelName);
-        $query = $model->search($search);
+        $query = $model->jsonSearch($search);
 
         self::attachScopes($scopes, $query);
         $resolved = $query->get();
@@ -76,7 +76,7 @@ class Search
     /**
      * @param  SearchRequest  $request
      * @param  string  $modelName
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return Builder[]|Collection
      *
      * @throws Exception
      */
@@ -84,7 +84,7 @@ class Search
     {
         $model = self::extractModelClass($modelName);
 
-        $search = $model->search($request->except('update'));
+        $search = $model->jsonSearch($request->except('update'));
 
         if (!$request->has('update')) {
             throw new Exception('Missing update parameters');
@@ -104,7 +104,7 @@ class Search
     public static function delete(SearchRequest $request, string $modelName)
     {
         $model = self::extractModelClass($modelName);
-        $foundModels = $model->search($request->all())->get();
+        $foundModels = $model->jsonSearch($request->all())->get();
 
         // This can be executed as a single query, but then we are left without
         // deleted event triggers. If there is a better way, I'm all ears.
