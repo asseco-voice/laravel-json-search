@@ -2,11 +2,11 @@
 
 namespace Illuminate\Database\Eloquent;
 
-    class Model
+class Model
+{
+    public static function jsonSearch(array $input): Builder
     {
-        public static function jsonSearch(array $input): Builder
-        {
-            /** @var \Asseco\JsonSearch\SearchServiceProvider $instance */
-            return $instance->boot();
-        }
+        /** @var \Asseco\JsonSearch\SearchServiceProvider $instance */
+        return $instance->boot();
     }
+}

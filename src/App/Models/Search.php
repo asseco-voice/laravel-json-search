@@ -14,11 +14,12 @@ use Illuminate\Support\Str;
 class Search
 {
     /**
-     * @param string $modelName
-     * @param array $search
-     * @param array|null $appends
-     * @param array|null $scopes
+     * @param  string  $modelName
+     * @param  array  $search
+     * @param  array|null  $appends
+     * @param  array|null  $scopes
      * @return Builder|Collection
+     *
      * @throws Exception
      */
     public static function get(string $modelName, array $search, ?array $appends = [], ?array $scopes = [])
