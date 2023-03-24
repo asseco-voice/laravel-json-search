@@ -2,7 +2,7 @@
 
 # Laravel JSON search
 
-This package exposes a ``search`` method on Laravel Eloquent models
+This package exposes a ``jsonSearch`` method on Laravel Eloquent models
 providing a detailed DB search with JSON as input parameter. 
 
 It functions out-of-the-box automatically for all Eloquent models 
@@ -145,7 +145,7 @@ Route::post('search', 'ExampleController@search');
 ```php
 public function search(Request $request)
 {
-    return SomeModel::search($request->all())->get();
+    return SomeModel::jsonSearch($request->all())->get();
 }
 ```
 
@@ -162,7 +162,7 @@ Route::put('search/update', 'ExampleController@search');
 ```php
 public function search(Request $request)
 {
-    $search = SomeModel::search($request->except('update'));
+    $search = SomeModel::jsonSearch($request->except('update'));
 
     if (!$request->has('update')) {
         throw new Exception('Missing update parameters');
@@ -187,7 +187,7 @@ Route::delete('search', 'ExampleController@search');
 ```php
 public function search(Request $request)
 {
-    return SomeModel::search($request->all())->delete();
+    return SomeModel::jsonSearch($request->all())->delete();
 }
 ```
 
