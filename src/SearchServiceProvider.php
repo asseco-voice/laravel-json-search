@@ -42,7 +42,7 @@ class SearchServiceProvider extends ServiceProvider
 
         Route::model('search_favorite', get_class(app(SearchFavorite::class)));
 
-        Builder::macro('search', function (array $input) {
+        Builder::macro('jsonSearch', function (array $input) {
             /**
              * @var $this Builder
              */
