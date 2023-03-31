@@ -27,10 +27,24 @@ class SearchFavorite extends Model implements \Asseco\JsonSearch\App\Contracts\S
 
     protected static function booted()
     {
+        static::saving(function (self $searchFavorite) {
+            if ($this->isDirty(['name', 'owner_id']) && $searchFavorite->exists()) {
+                throw new \Exception("Favorite with name $searchFavorite->name already exists for user.");
+            }
+        });
+
         static::deleting(function (self $searchFavorite) {
             if (!$searchFavorite->deletable) {
                 throw new FavoriteNotDeletable($searchFavorite);
             }
         });
+    }
+
+    protected function exists(): bool
+    {
+        return app(\Asseco\JsonSearch\App\Contracts\SearchFavorite::class)::query()
+            ->where('name', $this->name)
+            ->where('owner_id', $this->owner_id)
+            ->exists();
     }
 }
