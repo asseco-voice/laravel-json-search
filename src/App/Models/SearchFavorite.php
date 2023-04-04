@@ -28,7 +28,7 @@ class SearchFavorite extends Model implements \Asseco\JsonSearch\App\Contracts\S
     protected static function booted()
     {
         static::saving(function (self $searchFavorite) {
-            if ($this->isDirty(['name', 'owner_id']) && $searchFavorite->exists()) {
+            if ($searchFavorite->isDirty(['name', 'owner_id']) && $searchFavorite->exists()) {
                 throw new \Exception("Favorite with name $searchFavorite->name already exists for user.");
             }
         });
