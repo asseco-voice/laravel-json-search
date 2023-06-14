@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Asseco\JsonSearch\App\Models;
 
 use Asseco\JsonSearch\App\Http\Requests\SearchRequest;
+use Asseco\JsonSearch\App\Jobs\UpdateModels;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -77,23 +78,21 @@ class Search
     /**
      * @param  SearchRequest  $request
      * @param  string  $modelName
-     * @return Builder[]|Collection
      *
      * @throws Exception
      */
     public static function update(SearchRequest $request, string $modelName)
     {
-        $model = self::extractModelClass($modelName);
-
-        $search = $model->jsonSearch($request->except('update'));
-
         if (!$request->has('update')) {
             throw new Exception('Missing update parameters');
         }
 
-        $search->update($request->update);
+        $model = self::extractModelClass($modelName);
+        $update = $request->get('update');
 
-        return $search->get();
+        $model->jsonSearch($request->except('update'))->chunkById(100, function ($models) use ($update, $model) {
+            UpdateModels::dispatch(get_class($model), $models->pluck('id')->toArray(), $update);
+        });
     }
 
     /**
