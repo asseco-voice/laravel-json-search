@@ -47,7 +47,7 @@ class SearchController extends Controller
     {
         Search::update($this->setLimit($request), $modelName);
 
-        return response()->json("Queued for update");
+        return response()->json('Queued for update');
     }
 
     /**

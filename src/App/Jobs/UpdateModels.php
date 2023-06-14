@@ -19,7 +19,8 @@ class UpdateModels implements ShouldQueue
         protected string $model,
         protected array $ids,
         protected array $updateProperties
-    ) {}
+    ) {
+    }
 
     /**
      * Execute the job.
