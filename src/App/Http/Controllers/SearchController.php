@@ -8,6 +8,7 @@ use Asseco\JsonSearch\App\Http\Requests\SearchRequest;
 use Asseco\JsonSearch\App\Models\Search;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class SearchController extends Controller
 {
@@ -45,7 +46,9 @@ class SearchController extends Controller
      */
     public function update(SearchRequest $request, string $modelName): JsonResponse
     {
-        return response()->json(Search::update($this->setLimit($request), $modelName));
+        Search::update($this->setLimit($request), $modelName);
+
+        return response()->json(status: Response::HTTP_ACCEPTED);
     }
 
     /**
