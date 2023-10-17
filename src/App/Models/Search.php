@@ -91,9 +91,9 @@ class Search
     }
 
     /**
-     * @param array $search
-     * @param array $update
-     * @param string $modelName
+     * @param  array  $search
+     * @param  array  $update
+     * @param  string  $modelName
      *
      * @throws Exception
      */
@@ -118,8 +118,8 @@ class Search
     }
 
     /**
-     * @param array $search
-     * @param string $modelName
+     * @param  array  $search
+     * @param  string  $modelName
      *
      * @throws Exception
      */
