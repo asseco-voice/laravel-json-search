@@ -81,16 +81,27 @@ class Search
      *
      * @throws Exception
      */
-    public static function update(SearchRequest $request, string $modelName)
+    public static function update(SearchRequest $request, string $modelName): void
     {
         if (!$request->has('update')) {
             throw new Exception('Missing update parameters');
         }
 
-        $model = self::extractModelClass($modelName);
-        $update = $request->get('update');
+        self::updateBysearch($request->except('update'), $request->get('update'), $modelName);
+    }
 
-        $model->jsonSearch($request->except('update'))->chunkById(100, function ($models) use ($update, $model) {
+    /**
+     * @param  array  $search
+     * @param  array  $update
+     * @param  string  $modelName
+     *
+     * @throws Exception
+     */
+    public static function updateBySearch(array $search, array $update, string $modelName): void
+    {
+        $model = self::extractModelClass($modelName);
+
+        $model->jsonSearch($search)->chunkById(100, function ($models) use ($update, $model) {
             UpdateModels::dispatch(get_class($model), $models->pluck('id')->toArray(), $update);
         });
     }
@@ -101,10 +112,21 @@ class Search
      *
      * @throws Exception
      */
-    public static function delete(SearchRequest $request, string $modelName)
+    public static function delete(SearchRequest $request, string $modelName): void
+    {
+        self::deleteBySearch($request->all(), $modelName);
+    }
+
+    /**
+     * @param  array  $search
+     * @param  string  $modelName
+     *
+     * @throws Exception
+     */
+    public static function deleteBySearch(array $search, string $modelName): void
     {
         $model = self::extractModelClass($modelName);
-        $foundModels = $model->jsonSearch($request->all())->get();
+        $foundModels = $model->jsonSearch($search)->get();
 
         // This can be executed as a single query, but then we are left without
         // deleted event triggers. If there is a better way, I'm all ears.
