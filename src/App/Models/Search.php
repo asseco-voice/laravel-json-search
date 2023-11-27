@@ -25,14 +25,20 @@ class Search
      */
     public static function get(string $modelName, array $search, ?array $appends = [], ?array $scopes = [])
     {
-        $model = self::extractModelClass($modelName);
-        $query = $model->jsonSearch($search);
-
+        $query = self::getQuery($modelName, $search);
         self::attachScopes($scopes, $query);
         $resolved = $query->get();
         self::attachAppends($appends, $resolved);
 
         return $resolved;
+    }
+
+    public static function getQuery(string $modelName, array $search)
+    {
+        $model = self::extractModelClass($modelName);
+        $query = $model->jsonSearch($search);
+
+        return $query;
     }
 
     protected static function attachScopes(?array $scopes, $query): void
