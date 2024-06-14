@@ -17,6 +17,7 @@ class SearchFavoriteController extends Controller
     public function __construct(SearchFavoriteContract $searchFavorite)
     {
         $this->favorite = $searchFavorite;
+        $this->authorizeResource(SearchFavorite::class);
     }
 
     /**
