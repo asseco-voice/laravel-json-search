@@ -18,7 +18,7 @@ class SearchFavoriteController extends Controller
     {
         $this->favorite = $searchFavorite;
 
-        if(config('asseco-search.authorization.authorizeResource')) {
+        if (config('asseco-search.authorization.authorizeResource')) {
             $this->authorizeResource(SearchFavorite::class);
         }
     }

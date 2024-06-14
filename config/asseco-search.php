@@ -36,9 +36,9 @@ return [
     'authorization' => [
         /**
          * Should the authorizeResource() be added to SearchFavorite controller. Set to false if you do
-         * not have authorization implemented
+         * not have authorization implemented.
          */
-      'authorizeResource' => true,
+        'authorizeResource' => true,
     ],
 
     /**
