@@ -201,6 +201,7 @@ Usage:
 1. Use through standard laravel API resource routes on ``/api/search-favorites`` URL.
 1. If you need to modify migrations [publish the package](#configuration) and set `runs_migrations`
 property in the config file to ``false``.
+2. Set authorizeResource in asseco-search to false if you do not want $this->authorizeResource(SearchFavorite::class) to be added in controller.
 
 It is possible to extend the model used for search favorites and replace with your own. Make sure
 your model extends ``SearchFavorite`` and replace `search_favorite_model` key in the configuration 

@@ -17,7 +17,10 @@ class SearchFavoriteController extends Controller
     public function __construct(SearchFavoriteContract $searchFavorite)
     {
         $this->favorite = $searchFavorite;
-        $this->authorizeResource(SearchFavorite::class);
+
+        if(config('asseco-search.authorization.authorizeResource')) {
+            $this->authorizeResource(SearchFavorite::class);
+        }
     }
 
     /**

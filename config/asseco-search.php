@@ -33,6 +33,14 @@ return [
         'run'        => true,
     ],
 
+    'authorization' => [
+        /**
+         * Should the authorizeResource() be added to SearchFavorite controller. Set to false if you do
+         * not have authorization implemented
+         */
+      'authorizeResource' => true,
+    ],
+
     /**
      * Directly map a model name to a class or query builder instance
      * through a callback. This takes precedence over model_namespaces.
