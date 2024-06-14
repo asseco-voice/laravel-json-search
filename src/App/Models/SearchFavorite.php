@@ -16,7 +16,7 @@ class SearchFavorite extends Model implements \Asseco\JsonSearch\App\Contracts\S
     protected $fillable = ['model', 'name', 'owner_id', 'description', 'search', 'deletable'];
 
     protected $casts = [
-        'search'    => 'array',
+        'search' => 'array',
         'deletable' => 'boolean',
     ];
 
