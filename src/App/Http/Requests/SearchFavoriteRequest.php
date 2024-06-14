@@ -30,9 +30,9 @@ class SearchFavoriteRequest extends FormRequest
         $searchFavorite = $this->route('search_favorite');
 
         return [
-            'owner_id'    => 'nullable|string',
-            'model'       => 'required|string',
-            'name'        => [
+            'owner_id' => 'nullable|string',
+            'model' => 'required|string',
+            'name' => [
                 'required',
                 'string',
                 Rule::unique('search_favorites')->where(function ($query) use ($ownerId, $searchFavorite) {
@@ -40,8 +40,8 @@ class SearchFavoriteRequest extends FormRequest
                 }),
             ],
             'description' => 'string',
-            'search'      => 'required|array',
-            'deletable'   => 'boolean',
+            'search' => 'required|array',
+            'deletable' => 'boolean',
         ];
     }
 }
