@@ -12,12 +12,12 @@ return [
         'search_favorite' => SearchFavorite::class,
     ],
 
-    'migrations'        => [
+    'migrations' => [
 
         /**
          * UUIDs as primary keys.
          */
-        'uuid'       => false,
+        'uuid' => false,
 
         /**
          * Timestamp types.
@@ -30,7 +30,15 @@ return [
          * Should the package run the migrations. Set to false if you're publishing
          * and changing default migrations.
          */
-        'run'        => true,
+        'run' => true,
+    ],
+
+    'authorization' => [
+        /**
+         * Should the authorizeResource() be added to SearchFavorite controller. Set to false if you do
+         * not have authorization implemented.
+         */
+        'authorizeResource' => true,
     ],
 
     /**
@@ -40,7 +48,7 @@ return [
      * You CAN'T add query builder instance without a callback as it
      * will boot with the framework and cause errors in the process.
      */
-    'model_mapping'     => [
+    'model_mapping' => [
         // 'model' => Model::class,
         // 'model' => fn() => Model::someScope(),
         // 'model' => function() { return Model::someScope(); }
@@ -55,7 +63,7 @@ return [
     ],
 
     'routes' => [
-        'prefix'     => 'api',
+        'prefix' => 'api',
         'middleware' => ['api'],
     ],
 

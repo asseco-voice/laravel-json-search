@@ -48,6 +48,7 @@ class SearchServiceProvider extends ServiceProvider
              */
             $jsonQuery = new JsonQuery($this, $input);
             $jsonQuery->search();
+
             //$this->dd();
             return $this;
         });
