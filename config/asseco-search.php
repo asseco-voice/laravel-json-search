@@ -72,4 +72,6 @@ return [
      * limit is higher, it will automatically be set to this value. Leave the value as null if you don't want to use this feature.
      */
     'default_limit' => null,
+
+    'forbid_delete_all' => true,
 ];
