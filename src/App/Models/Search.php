@@ -131,7 +131,6 @@ class Search
      */
     public static function deleteBySearch(array $search, string $modelName): void
     {
-
         if (config('asseco-search.forbid_delete_all') && empty($search['search'])) {
             throw new Exception('Missing search parameter', 400);
         }
