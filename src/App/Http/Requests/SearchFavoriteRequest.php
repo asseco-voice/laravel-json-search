@@ -42,6 +42,7 @@ class SearchFavoriteRequest extends FormRequest
             'description' => 'string',
             'search' => 'required|array',
             'deletable' => 'boolean',
+            'group' => 'nullable|string'
         ];
     }
 }
