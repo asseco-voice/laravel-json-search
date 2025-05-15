@@ -44,6 +44,7 @@ jobs:
       - name: PHP STatic ANalyser (phpstan)
         uses: php-actions/phpstan@v3
         with:
+          version: latest
           path: 'src'
           php_version: '8.2'
           level: 0
