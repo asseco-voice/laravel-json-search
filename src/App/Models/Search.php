@@ -78,7 +78,7 @@ class Search
 
         $resolved = $relation ? $model->{$relation} : $model;
 
-        $resolved->append($append);
+        $resolved?->append($append);
     }
 
     /**

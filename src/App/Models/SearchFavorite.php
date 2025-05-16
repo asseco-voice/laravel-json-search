@@ -13,7 +13,7 @@ class SearchFavorite extends Model implements \Asseco\JsonSearch\App\Contracts\S
 {
     use HasFactory;
 
-    protected $fillable = ['model', 'name', 'owner_id', 'description', 'search', 'deletable'];
+    protected $fillable = ['model', 'name', 'owner_id', 'description', 'search', 'deletable', 'group'];
 
     protected $casts = [
         'search' => 'array',
