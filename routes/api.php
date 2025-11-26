@@ -1,6 +1,7 @@
 <?php
 
 use Asseco\JsonSearch\App\Http\Controllers\SearchController;
+use Asseco\JsonSearch\App\Http\Controllers\PaginatedSearchController;
 use Asseco\JsonSearch\App\Http\Controllers\SearchFavoriteController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,4 +24,8 @@ Route::prefix(config('asseco-search.routes.prefix'))
         Route::delete('search/{model}', [SearchController::class, 'destroy'])->name('search.destroy');
 
         Route::apiResource('search-favorites', SearchFavoriteController::class);
+
+        Route::post('search-paginated/{model}', [PaginatedSearchController::class, 'index'])->name('search-paginated.index');
+        Route::put('search-paginated/{model}/update', [PaginatedSearchController::class, 'update'])->name('search-paginated.update');
+        Route::delete('search-paginated/{model}', [PaginatedSearchController::class, 'destroy'])->name('search-paginated.destroy');
     });

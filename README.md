@@ -207,6 +207,35 @@ It is possible to extend the model used for search favorites and replace with yo
 your model extends ``SearchFavorite`` and replace `search_favorite_model` key in the configuration 
 with your model.
 
+
+## Search - paginated
+
+~~~
+POST  https://service.url/api/search-paginated/:model 
+~~~
+
+Request:
+~~~
+{
+    "page": 2,
+    "limit": 10,
+    "search": [ .... ]
+}
+~~~
+
+Response:
+~~~
+{
+    "data": [ ... ],
+    "metadata": {
+        "page": 2,
+        "limit": 10,
+        "count": 10,
+        "total_count": 145
+    }
+}
+~~~
+
 ## Debugging
 
 If you'd like to see query called instead of a result, uncomment ``dump`` line
