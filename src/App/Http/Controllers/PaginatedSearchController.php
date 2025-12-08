@@ -141,7 +141,7 @@ class PaginatedSearchController extends Controller
         $cacheKey = "json_search_paginated_count_{$hash}";
 
         return Cache::remember($cacheKey, 600, function () use ($searchParams, $modelName) {
-            $countParams = Arr::except($searchParams, ['limit', 'offset']);
+            $countParams = Arr::except($searchParams, ['limit', 'offset', 'order_by']);
             $countParams['count'] = true;
 
             $resultArray = Search::get($modelName, $countParams, [], [])->toArray();
